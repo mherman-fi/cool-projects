@@ -24,5 +24,5 @@ Attacks do not correspond precisely to the scheduled times outlined in the Excel
 Most IoAs can be found simply by searching for a specific string (eg: “nmap”). This information typically originates from the [REDACTED] field in the [REDACTED] log. In the case of the [REDACTED] attack the most relevant field is the [REDACTED. For [REDACTED], the most relevant fields are [REDACTED]. The majority of [REDACTED] entries are malicious. They are identifiable from the string [REDACTED]. Students should be able to identify these reasonably easily. 
 
 
-The first [REDACTED] attacks do not overlap. The [REDACTED] attack will be very easy to identify. The [REDACTED] field will provide the necessary information. Exfiltration occurs in the middle of the DoS attack, however. Students will in this case have to search for a suspicious IP address in [REDACTED]. The relevant field is [REDACTED]. 
+The first [REDACTED] attacks do not overlap. The [REDACTED] attack will be very easy to identify. The [REDACTED] field will provide the necessary information. Exfiltration occurs in the [REDACTED] attack, however. Students will in this case have to search for a suspicious IP address in [REDACTED]. The relevant field is [REDACTED]. 
 
