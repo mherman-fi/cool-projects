@@ -14,7 +14,7 @@ theme:
     - text: Fira Sans
     - code: Fira code
 nav:
-  - 'Home': index.md
+  - 'Home': README.md
   - 'Preparation':
     - Attack Chain: 1-preparation/phases.md
   - 'Reconnaissance':
