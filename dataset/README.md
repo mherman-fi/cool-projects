@@ -2,7 +2,7 @@
 
 ## Dataset Breakdown
 
-All sensitive information has been redacted or removed from this project. It was decided to leave the altered file in place in order to give readers a sense of the thought processes behind the project. Please contact me directly for more information.
+All sensitive information has been redacted or removed from this project. It was decided to leave the altered file in place in order to give readers a sense of the thought processes behind the project. The image was left in place because it illustrates the logic and flow of the attacks. It reflects neither the final attack sequencing nor the attacks themselves. Please contact me directly for more information. 
 
 
 The dataset was generated between 01.07.2023 and 02.07.2023. Non-malicious web traffic was generated over the following sites: 10.40.20.110 (win11-1.rt.vle.fi), 10.40.20.100 (win10-1.rt.vle.fi), 10.40.20.101 (win10-2.rt.vle.fi) and 10.40.20.10 (dc.rt.vle.fi). Malicious traffic originates from [REDACTED]. The exfiltration destination has been manually altered to appear as [REDACTED] in origin. The altered IP is [REDACTED]
