@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/storsvc-privesc/LPE_via_StorSvc/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>LPE via StorSvc - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "LPE via StorSvc";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/storsvc-privesc/LPE_via_StorSvc/README.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/storsvc-privesc/LPE_via_StorSvc/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>LPE via StorSvc</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="lpe-via-storsvc">LPE via StorSvc</h1>
+<p>Windows Local Privilege Escalation via StorSvc service (writable SYSTEM path DLL Hijacking)</p>
+<h2 id="summary">Summary</h2>
+<p>StorSvc is a service which runs as <code>NT AUTHORITY\SYSTEM</code> and tries to load the missing <strong>SprintCSP.dll</strong> DLL when triggering the <code>SvcRebootToFlashingMode</code> RPC method locally. </p>
+<h2 id="description">Description</h2>
+<p>The <code>StorSvc.dll!SvcRebootToFlashingMode</code> RPC method, calls <code>StorSvc.dll!InitResetPhone</code> which also calls <code>StorSvc.dll!ResetPhoneWorkerCallback</code>, that tries to load <strong>SprintCSP.dll</strong> as shown in the image below:</p>
+<p><img alt="FactoryResetUICC.png" src="FactoryResetUICC.png" /></p>
+<p>As this DLL is missing, it is loaded following the <strong>DLL Search Order</strong> flow and we can take advantage of this behaviour by placing a malicious DLL in a writable folder contained in the SYSTEM <code>%PATH%</code>. Then, the malicious DLL should be executed with <strong>SYSTEM privileges</strong>.</p>
+<p>It is worth noting that the service is launched as <code>NT AUTHORITY\SYSTEM</code> in the service group <code>LocalSystemNetworkRestricted</code> which has the following privileges:</p>
+<pre><code>Privilege Name               Description                                         State       
+============================ =================================================== =============
+SeTcbPrivilege               Act as part of the operating system                 Enabled   
+SeLoadDriverPrivilege        Load and unload device drivers                      Disabled
+SeBackupPrivilege            Back up files and directories                       Disabled
+SeRestorePrivilege           Restore files and directories                       Disabled
+SeSystemEnvironmentPrivilege Modify firmware environment values                  Disabled
+SeChangeNotifyPrivilege      Bypass traverse checking                            Enabled   
+SeManageVolumePrivilege      Perform volume maintenance tasks                    Enabled   
+</code></pre>
+<p>The command line that corresponds to this service is <code>C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted -p -s StorSvc</code>.</p>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p>In this repo we provide 2 different source codes:
+- <a href="./RpcClient"><strong>RpcClient.exe</strong></a>: that triggers the RPC call.
+- <a href="./SprintCSP/"><strong>SprintCSP.dll</strong></a>: which can be placed to exploit the DLL Hijacking. This PoC runs a <code>whoami</code> command and writes the output to <code>C:\ProgramData\whoamiall.txt</code>. If you want to expand the functionality of this PoC you can edit the <code>DoStuff()</code> function at <a href="SprintCSP/SprintCSP/main.c#L7">main.c</a>.</p>
+<p>The provided exploit should work by default and has been tested on <strong>Windows 10</strong>, <strong> Windows 11</strong>, <strong>Windows Server 2019</strong> and <strong>Windows Server 2022</strong>. <strong>In order to make it work, the <code>#define</code> macro at <a href="RpcClient/RpcClient/storsvc_c.c#L3">storsvc_c.c</a> must be changed so the exploit is adapted to the target machine's operative system.</strong></p>
+<p>After triggering the exploit it is necessary to <strong>stop</strong> or <strong>reboot</strong> the service, which <a href="./SprintCSP/">SprintCSP.dll</a> already does.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>Find writable SYSTEM path with <code>reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -v Path</code></li>
+<li>Copy <a href="./SprintCSP/">SprintCSP.dll</a> to the writable path</li>
+<li>Execute <a href="./RpcClient">RpcClient.exe</a></li>
+<li>Check <code>C:\ProgramData\whoamiall.txt</code></li>
+</ol>
+<p><img alt="PoC.gif" src="PoC.gif" /></p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://itm4n.github.io/fuzzing-windows-rpc-rpcview/">Fuzzing Windows RPC with RpcView</a></li>
+<li><a href="https://github.com/sailay1996/CdpSvcLPE/blob/main/README.md">CdpSvcLPE</a></li>
+<li><a href="https://itm4n.github.io/cdpsvc-dll-hijacking/">CDPSvc DLL Hijacking - From LOCAL SERVICE to SYSTEM</a></li>
+</ul>
+<h1 id="_1"></h1>
+<p><a href="https://www.blackarrow.net"><img alt="" src="https://img.shields.io/badge/www-blackarrow.net-E5A505?style=flat-square" /></a> <a href="https://twitter.com/BlackArrowSec"><img alt="" src="https://img.shields.io/badge/twitter-@BlackArrowSec-00aced?style=flat-square&amp;logo=twitter&amp;logoColor=white" /></a> <a href="https://www.linkedin.com/company/blackarrowsec/"><img alt="" src="https://img.shields.io/badge/linkedin-@BlackArrowSec-0084b4?style=flat-square&amp;logo=linkedin&amp;logoColor=white" /></a></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

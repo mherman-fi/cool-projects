@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/4-initial-access/phishing/evilnovnc/EvilnoVNC/" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>EvilNoVNC - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "EvilNoVNC";
+        var mkdocs_page_input_path = "4-initial-access/phishing/evilnovnc/EvilnoVNC.md";
+        var mkdocs_page_url = "/4-initial-access/phishing/evilnovnc/EvilnoVNC/";
+      </script>
+    
+    <script src="../../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">EvilNoVNC</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-and-usage">Installation and Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#testing-results">Testing results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#blue-team-perspective">Blue team perspective</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mitre-attck">Mitre ATT&amp;CK</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Initial Access &raquo;</li>
+      <li>EvilNoVNC</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="evilnovnc-for-phishing-mfa-bypass">EvilnoVNC for phishing &amp; MFA bypass</h1>
+<h2 id="background">Background</h2>
+<p>EvilnoVNC (<a href="https://github.com/JoelGMSec/EvilnoVNC">github</a>) is a phishing tool that uses <em>Browser-in-the-middle</em> attack to steal credentials and bypass Multifactor Authentication (MFA). The EvilnoVNC attack platform uses an open-source noVNC javascript client to run a transparent malicious Chromium browser between the victim and the target web application.  </p>
+<p><img alt="Bitm attack" src="../images/BitM.JPG" /><br />
+Browser-in-the-middle attack. <a href="https://link.springer.com/article/10.1007/s10207-021-00548-5">Source</a>  </p>
+<p><img alt="EvilnoVNC flow" src="../images/attack-platform.JPG" /><br />
+EvilnoVNC plaform attack chart. <a href="https://link.springer.com/article/10.1007/s10207-021-00548-5">Source</a>  </p>
+<h2 id="requirements">Requirements</h2>
+<p><code>docker</code></p>
+<h2 id="installation-and-usage">Installation and Usage</h2>
+<p><strong>Install EvilnoVNC:</strong>  </p>
+<pre><code>git clone https://github.com/JoelGMSec/EvilnoVNC
+cd EvilnoVNC ; sudo chown -R 103 Downloads
+sudo docker build -t joelgmsec/evilnovnc .
+</code></pre>
+<p><strong>Usage:</strong>  </p>
+<p>Display options with the <code>./start.sh -h</code> -command.  </p>
+<pre><code>┌──(kali㉿kali-vle)-[~/techiques/noVNCphish/EvilnoVNC]
+└─$ ./start.sh 1920x1080x24 https://&lt;your target domain here&gt;                                                
+
+  _____       _ _          __     ___   _  ____
+ | ____|_   _(_) |_ __   __\ \   / / \ | |/ ___|
+ |  _| \ \ / / | | '_ \ / _ \ \ / /|  \| | |
+ | |___ \ V /| | | | | | (_) \ V / | |\  | |___
+ |_____| \_/ |_|_|_| |_|\___/ \_/  |_| \_|\____|
+
+  ---------------- by @JoelGMSec --------------
+
+[&gt;] EvilnoVNC Server is running..
+[+] URL: http://localhost
+[!] Press Ctrl+C at any time to close!
+[+] Avoiding dynamic resolution steps..
+[+] Desktop Resolution: 1920x1080x24
+[+] Cookies will be updated every 30 seconds.. 
+
+</code></pre>
+<p>Setting up EvilnoVNC phishing platform </p>
+<h2 id="testing-results">Testing results</h2>
+<p>The tool has been tested to phish test google account credentials enabled with MFA. A link was first sent to the victim who then navigated to the EvilnoVNC platform:  </p>
+<p><img alt="EvilnoVNC login" src="../images/login.JPG" /><br />
+The victim clicks the link and is taken to the chosen domain.In this case is is <code>accounts.google.com</code>. Notice the URL points to the attacker's domain.  </p>
+<p><img alt="EvilnoVCN MFA login" src="../images/phishing_capture2.JPG" /><br />
+The victim logs in to the service with MFA.  </p>
+<p><img alt="logged in the attacker's browser" src="../images/phishing_capture3.JPG" />  </p>
+<p>The victim is now logged into their account on the attacker's browser.</p>
+<p>Session cookies and keystrokes are captured in the background:<br />
+<img alt="EvilnoVNC capture" src="../images/phishing_capture.JPG" />  </p>
+<p>At this point the attacker can either use captured cookies to log in to the account or just kick the victim off the noVNC platform and use it themselves.  </p>
+<p>The tool also works on mobile browsers.</p>
+<h2 id="limitations">Limitations</h2>
+<p>Currently this setup is only suitable for spear phishing attacks. Only one user can use one noVNC service. Some sort of proxy would have to be set up to redirect different users to their own noVNC services. Possible solutions are found <a href="https://fhlipzero.io/blogs/6_noVNC/noVNC.html">here</a>  </p>
+<p>While the actual target service is 100% authentic, the domain the victim navigates to is the attacker's. This can be seen in the URL. Perceptive users can detect this, leading to phishing failure.  </p>
+<p>The browser's dimensions have to be specified beforehand. This is not a huge problem if the victim's device-type is known. Desktops typically have 1920x1080 dimensions for example. </p>
+<h2 id="blue-team-perspective">Blue team perspective</h2>
+<p>As with other phishing attacks, proper end user education can thwart attacks such as these. The attacker's domain can be seen in the URL when the victim navigates to the site.  </p>
+<h2 id="mitre-attck">Mitre ATT&amp;CK</h2>
+<p><strong>TA0001 - Initial access</strong><br />
+- T1566 - Phishing  </p>
+<p><strong>TA0006 - Credential access</strong><br />
+- T1557 - Adversary-in-the-middle<br />
+- T1056 - Input Capture<br />
+- T1539 - Steal Web Session Cookies  </p>
+<p><strong>TA0009 - Collection</strong><br />
+- T1557 - Adversary-in-the-middle<br />
+- T1185 - Browser Session Hijacking<br />
+- T1056 - Input Capture  </p>
+<p><img alt="MITRE ATT&amp;CK Navigator" src="../images/EvilnoVNC_Phishing.svg" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../bitb/bitb/" class="btn btn-neutral float-left" title="Browser-in-Browser"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../dll-hijack/dll-hijack/" class="btn btn-neutral float-right" title="DLL Hijack">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../bitb/bitb/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../dll-hijack/dll-hijack/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../../..';</script>
+    <script src="../../../../js/theme_extra.js" defer></script>
+    <script src="../../../../js/theme.js" defer></script>
+      <script src="../../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

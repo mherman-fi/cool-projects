@@ -1,0 +1,36 @@
+site_name: 'Red-Teaming Tools Usage Guide'
+site_url: "http://ab8910.pages.labranet.jamk.fi"
+theme:
+  name: readthedocs
+  features:
+    - language: en
+    - history_buttons: false
+    - article_nav_bottom: false
+    - article_nav_top: false
+    - content.code.annotation
+  palette:
+    - scheme: default
+  font:
+    - text: Fira Sans
+    - code: Fira code
+nav:
+  - 'Home': index.md
+  - 'Preparation':
+    - Attack Chain: 1-preparation/phases.md
+  - 'Reconnaissance':
+    - Shark Jack: 2-recon/hak5/hak5.md
+  - 'Initial Access':
+    - Browser-in-Browser: 4-initial-access/phishing/bitb/bitb.md
+    - EvilNoVNC: 4-initial-access/phishing/evilnovnc/EvilnoVNC.md
+    - DLL Hijack: 4-initial-access/phishing/dll-hijack/dll-hijack.md
+  - 'Local Privilege Escalation':
+    - LocalPotato: 5-local-privilege-escalation/localpotato/LocPotato.md
+    - StorSvc Abuse: 5-local-privilege-escalation/storsvc-privesc/storsvc_privesc.md
+    - SigLoader: 5-local-privilege-escalation/sigflip/sigflip.md
+  - 'Command and Control':
+    - Sliver: 5-local-privilege-escalation/sliver/sliver.md
+  - 'Credential Access':
+    - Keepass Password Dumper: 3-resource-development/keepass-password-dumper/keepass.md
+  - 'Domain Privilege Escalation':
+    - SAM the Admin: 7-privilege-escalation/sam-the-admin/sam-the-admin.md
+

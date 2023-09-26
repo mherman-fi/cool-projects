@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/localpotato/LocalPotato/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>LocalPotato - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "LocalPotato";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/localpotato/LocalPotato/README.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/localpotato/LocalPotato/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>LocalPotato</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="localpotato">LocalPotato</h1>
+<p>Another Local Windows privilege escalation using a new potato technique ;)</p>
+<p>The LocalPotato attack is a type of NTLM reflection attack that targets local authentication. This attack allows for arbitrary file read/write and elevation of privilege. </p>
+<p><strong>NOTE: This vulnerability has been fixed by Microsoft in the January 2023 Patch Tuesday with the <a href="https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2023-21746">CVE-2023-21746</a>. If you run this exploit against a patched machine it won't work.</strong> </p>
+<p>More technical details at --&gt; https://www.localpotato.com/localpotato_html/LocalPotato.html</p>
+<h2 id="usage">Usage</h2>
+<pre><code>
+         LocalPotato (aka CVE-2023-21746)
+         by splinter_code &amp; decoder_it
+
+
+Mandatory Args:
+-i Source file to copy
+-o Output file - do not specify the drive letter
+Example: localpotato -i c:\hacker\evil.dll -o windows\system32\evil.dll
+
+Optional Args:
+-c CLSID (Default {854A20FB-2D44-457D-992F-EF13785D2B51})
+-p COM server port (Default 10271)
+</code></pre>
+<h2 id="demo">Demo</h2>
+<p><img alt="image" src="https://user-images.githubusercontent.com/19797064/218135881-af046286-c299-4f08-856b-2265adc46e64.png" /></p>
+<h2 id="authors">Authors:</h2>
+<ul>
+<li><a href="https://twitter.com/decoder_it">@decoder_it</a></li>
+<li><a href="https://twitter.com/splinter_code">@splinter_code</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

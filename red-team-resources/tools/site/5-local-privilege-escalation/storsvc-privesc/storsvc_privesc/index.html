@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>StorSvc Abuse - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "StorSvc Abuse";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/storsvc-privesc/storsvc_privesc.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">StorSvc Abuse</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#technical-overview">Technical overview</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#preparation">Preparation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#attack-steps">Attack steps</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Local Privilege Escalation &raquo;</li>
+      <li>StorSvc Abuse</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="storsvc-abuse">StorSvc Abuse</h1>
+<h2 id="background">Background</h2>
+<p>This exploit is a DLL-hijack used for local privilege escalation in Windows machines. 
+The exploit is based on misusing Windows <em>Storage Service</em> and runs with SYSTEM privileges. It works by loading a missing DLL <em>SprintCSP.dll</em> when a specific RPC call <em>SvcRebootToFlashingMode</em> is made. </p>
+<p>An attacker transfers a compiled malicious version of the normally missing DLL and a modified version of <em>RpcClient</em> to the target machine. The RpcClient is tailored for the particular Windows version (10, 11, Server 2019, Server 2022). The attacker then writes the malicious DLL file into a folder in Windows PATH (iex. with <code>LocalPotato</code> exploit), followed by executing the modified RpcClient. This execution triggers the RPC Call which causes the Storage Service to load the missing DLL. </p>
+<p>The DLL file compiled by the attacker ( <em>SprintCSP.dll</em> ) is designed to abuse the Windows Storage Service. This technique was initially discovered by <a href="https://github.com/blackarrowsec/redteam-research/tree/master/LPE%20via%20StorSvc">BlackArrowSec</a>. According to the company, this DLL-hijack has been tested on Windows 10, Windows 11, Windows Server 2019 and Windows Server 2022. RpcClient versions have been precompiled and they can be found in <code>binaries/RpcClients</code>.</p>
+<p>The original PoC repository has been cloned into the directory <code>LPE via StorSvc</code>.</p>
+<h3 id="technical-overview">Technical overview</h3>
+<p>The RPC method <code>SvcRebootToFlashingMode</code> triggered by the execution of RpcClient causes another function to call <code>ResetPhoneWorkerCallback</code> which loads the SprintCSP.dll. From this DLL, a function <code>FactoryResetUICC</code> is searched for. That function will be called if it is found. As the attacker has provided the missing DLL containing the required function, it will be executed with SYSTEM privileges. </p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>The attacker must be able to write into a directory in the system PATH<ul>
+<li>either find a writeable directory in path or utilize exploit like <code>LocalPotato</code> to gain write privileges</li>
+</ul>
+</li>
+<li>The RpcClient.exe version must be correctly selected for the OS<ul>
+<li>the specific version of RpcClient must be used</li>
+</ul>
+</li>
+</ul>
+<h2 id="preparation">Preparation</h2>
+<p>Compile <em>SprintCSP.dll</em>:
+- 1. Edit the function <code>DoStuff()</code> in file <code>LPE_via_StorSvc/SpringCSP/SprintCSP/main.c</code>. Example below adds a user to local administrators group.</p>
+<pre><code class="language-c">void DoStuff() {
+
+    // Replace all this code by your payload
+    STARTUPINFO si = { sizeof(STARTUPINFO) };
+    PROCESS_INFORMATION pi;
+    CreateProcess(L&quot;c:\\windows\\system32\\cmd.exe&quot;,L&quot; /C net localgroup administrators user /add&quot;,
+        NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, L&quot;C:\\Windows&quot;, &amp;si, &amp;pi);
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+
+    return;
+}
+</code></pre>
+<ul>
+<li>
+<ol>
+<li>Save changes made to <code>main.c</code> and compile the library with <code>msbuild</code>  or <code>Microsoft Visual Studio</code></li>
+</ol>
+</li>
+</ul>
+<h2 id="attack-steps">Attack steps</h2>
+<ol>
+<li>
+<p>Transfer the compiled SprintCSP.dll and the correct version of RpcClient to victim host</p>
+</li>
+<li>
+<p>Write the DLL-file into a directory in PATH</p>
+</li>
+<li>
+<p>Execute the RpcClient</p>
+</li>
+<li>
+<p>Enjoy!</p>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../localpotato/LocPotato/" class="btn btn-neutral float-left" title="LocalPotato"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../sigflip/sigflip/" class="btn btn-neutral float-right" title="SigLoader">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../localpotato/LocPotato/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../sigflip/sigflip/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

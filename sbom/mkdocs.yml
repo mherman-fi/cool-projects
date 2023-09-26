@@ -1,0 +1,30 @@
+site_name: 'Dependency Track Resources'
+site_url: "http://ab8910.pages.labranet.jamk.fi"
+theme:
+  name: readthedocs
+  features:
+    - language: en
+    - history_buttons: false
+    - article_nav_bottom: false
+    - article_nav_top: false
+    - content.code.annotation
+  palette:
+    - scheme: default
+  font:
+    - text: Fira Sans
+    - code: Fira code
+nav:
+  - 'Home': files/readme/0-project-description.md
+  - 'Dependency Track':
+    - Installation: files/readme/1-installation-guide.md
+    - Basic Usage: files/readme/2-basic-usage-guide.md
+  - 'Environment': files/readme/3-environment.md
+  - 'Script Automation': files/readme/4-bolt-automation.md
+  - 'Generating SBOMs': 
+    - Distro2sbom: files/readme/5-generate-sboms-distro2sbom.md
+    - Grype: files/readme/6-generate-sboms-grype.md
+  - Scanning Outdated Components: files/readme/7-outdated-component-scan.md
+  - 'Vulnerability Management': 
+    - PoCsploit: files/readme/8-vulnerability-management-pocsploit.md
+    - Generating Vulnerability Reports: files/readme/9-vulnerability-management-gen-report.md
+

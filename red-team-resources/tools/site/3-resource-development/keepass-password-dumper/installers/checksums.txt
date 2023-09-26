@@ -1,0 +1,3 @@
+
+KeePass-2.52.msi - SHA256: 3eadef4ac19e279878f2e48febf6fd830a66affebfb2b59b8f36fc0a03be0190
+KeePass-2.53.1-Setup.exe - SHA256: 067727caa782f53f6232f8f59bc945384fce98817b014300039b28487c06a5cd

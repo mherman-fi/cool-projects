@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/localpotato/LocPotato/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>LocalPotato - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "LocalPotato";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/localpotato/LocPotato.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/localpotato/LocPotato/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">LocalPotato</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#technical-overview">Technical overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Local Privilege Escalation &raquo;</li>
+      <li>LocalPotato</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="background">Background</h2>
+<p>LocalPotato is used to exploit Windows vulnerability CVE-2023-21746 on non-DC machines. Like other "potato" exploits, it abuses a flaw in NTLM authentication, local version of it specifically. Using this exploit, the attacker can read and write arbitrary files in a Windows machine with SYSTEM privileges. </p>
+<p>The exploit binary has been pre-compiled and it can be found in <code>LocalPotato/x64/Debug/LocalPotato.exe</code>. Directory <code>LocalPotato</code> is a clone of the original repository https://github.com/decoder-it/LocalPotato. </p>
+<p>As this exploit only leads to arbitrary file reading / writing with SYSTEM privileges, it cannot be used for code execution directly. To perform a <em>code execution</em> with SYSTEM privileges, LocalPotato can be chained with <em>DLL-hijacking</em> by writing a  malicious DLL-library to Windows PATH. This can be done with <code>StorSvc_privesc</code> as example.</p>
+<h3 id="technical-overview">Technical overview</h3>
+<p>Local NTLM authentication is not based on a challenge-response type of mechanism. Instead, the client messages it's workstation name and domain to LSASS, (<em>Local Security Authority Server Service</em>), the LSASS sends the client a <em>security context ID</em>, and the client informs the server if it has correctly <em>associated</em> itself with the specific security context ID. </p>
+<p>The exploit can be seen as a <em>man-in-the-middle</em> attack. The main idea is to make a privileged process to start a local NTLM authentication to a "rogue" SMB server run by the attacker. The rogue server provides <strong>Security Context A</strong>  for the privileged connection but won't immediately pass the response to the process. Simultaneously, the attacker starts his own client ("rogue client") to initiate a connection to the local SMB Server with current unprivileged credentials. Rogue client then receives <strong>Security Context B</strong>. Attacker then swaps the security contexts, associating the privileged security context with his own client and passes the unprivileged context to the system's client process. With the high-privileged security context, attacker opens an SMB connection to tree <code>\\127.0.0.1\c$</code>, requests file creation and write operations and closes the file.  </p>
+<p>The figure below demonstrates the exploit process.</p>
+<p><img alt="" src="../images/localpotato_attack.jpg" /></p>
+<p><br></p>
+<h3 id="requirements">Requirements</h3>
+<p>Following conditions must be met for the target to be exploit:</p>
+<ul>
+<li>Victim host must not have January 2023 security updates installed</li>
+<li>Victim host must not be a domain controller</li>
+<li>
+<p>Victim host must have default SMB shares enabled (<code>C$</code> and <code>ADMIN$</code>)</p>
+<ul>
+<li>
+<p>These shares should be listed in output when executing command <code>net share</code></p>
+</li>
+<li>
+<p>Command <code>reg query HKLM\SYSTEM\CurrentControlSet\Services\lanmanserver\parameters /v AutoShareWks</code>  should return <code>0x1</code> for property <code>AutoShareWks</code> if shares are enabled </p>
+</li>
+<li>
+<p>To enable shares (preparing environment), execute command <code>reg add HKLM\SYSTEM\CurrentControlSet\Services\lanmanserver\parameters /f /v AutoShareWks /t REG_DWORD /d 1</code> with administrative privileges -&gt; then reboot the computer and run command <code>net share</code> to check that the shares exist</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="attack-steps">Attack steps</h2>
+<ol>
+<li>
+<p>Deliver <code>LocalPotato.exe</code> to the victim host. </p>
+</li>
+<li>
+<p>With the binary on the victim machine, carry out desired actions using following syntax:</p>
+</li>
+</ol>
+<pre><code class="language-powershell">LocalPotato.exe -i IN_FILE -o OUT_FILE
+
+# Write with SYSTEM privileges, write to C:\Windows\System32\
+LocalPotato.exe -i bad.dll -o \Windows\System32\bad.dll
+
+
+# Read with SYSTEM privileges
+LocalPotato.exe -i \Windows\System32\forbidden.file -o \Users\user\Desktop\forbidden.file
+
+</code></pre>
+<p><strong>MIND THE USAGE</strong>: Do  NOT use the drive letter in output path!</p>
+<p>The figure below demonstrates the usage and output:</p>
+<p><img alt="LocalPotato being used to write to System32" src="../images/command_executed_on_victim.png" /></p>
+<p><br></p>
+<h2 id="for-blue-teams">For blue teams</h2>
+<p>Traces left by this attack consist of localhost network traces and static traces. Static traces are traces like file artifacts and file hashes. Dynamic traces are the ones created during the execution of the exploit binary, such as network traces. </p>
+<p><strong>NOTE:</strong> During the testing, usage of the LocalPotato binary <strong>could not be connected to any Windows Event Log events.</strong> The binary was executed and execution did not lead to any new events appearing in the statistics. </p>
+<p><br></p>
+<h2 id="static-traces">Static traces</h2>
+<p>There is one certain definable static trace left by this exploit which is the exploit binary. There are several possible ways to detect this binary.</p>
+<h3 id="detecting-localpotatoexe">Detecting LocalPotato.exe</h3>
+<table>
+<thead>
+<tr>
+<th align="center">Trace / type</th>
+<th align="center">Trace location</th>
+<th align="center">Hash</th>
+<th align="center">Presence indicator</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">LocalPotato.exe / file</td>
+<td align="center">Victim host</td>
+<td align="center">md5:<code>2a9c6005e53b4e4738bf2d519fe2db1b</code>, sha1:<code>2238d9ca63cbc2b89d7feb692d411e55111a3dc6</code></td>
+<td align="center">100%</td>
+<td align="center">Hash is a certain indicator though easily altered by the attacker</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h4 id="strings-localpotatoexe">Strings, LocalPotato.exe</h4>
+<p>There are many strings which can be used for hunting the exploit binary. The most certain string to look for is:   case <strong>insensitive</strong> <code>localpotato</code>. Few other usable hunting strings are provided below:</p>
+<pre><code>LocalPotato (aka CVE-2023-21746)
+by splinter_code &amp; decoder_it
+
+[*] Objref Moniker Display Name = 
+[*] Calling CoGetInstanceFromIStorage with CLSID:
+[*] Marshalling the IStorage object... IStorageTrigger written: 100 bytes
+[*] Received DCOM NTLM type 1 authentication from the privileged client
+[*] Connected to the SMB server with ip 127.0.0.1 and port 445
+[+] SMB Client Auth Context swapped with SYSTEM
+[+] RPC Server Auth Context swapped with the Current User
+[*] Received DCOM NTLM type 3 authentication from the privileged client
+[+] SMB reflected DCOM authentication succeeded!
+[+] SMB Connect Tree: \\127.0.0.1\c$  success
+[+] SMB Create Request File:
+[+] SMB Write Request file:
+[+] SMB Close File success
+[+] SMB Tree Disconnect success
+</code></pre>
+<p><br></p>
+<h2 id="dynamic-traces">Dynamic traces</h2>
+<p>Traces have been mapped to attack procedures which are executed during the exploitation. Listed attack procedures might not separate manual actions carried out by the attacker. The procedures might be smaller actions induced by a single command executed by the attacker.</p>
+<h3 id="windows-event-traces">Windows event traces</h3>
+<ul>
+<li>Reminder: No events were found to be created by by exploiting the vulnerability.</li>
+</ul>
+<h3 id="networking-traces">Networking traces</h3>
+<p>Exploiting the vulnerability causes network traffic captureable with <em>localhost</em> interface. It is difficult to recognize the traffic directly related to LocalPotato. There are some general indicators which were found to be related to usage of LocalPotato binary. These individual indicators are related to the exploit as a <strong>group</strong>. They cannot be individually used to detect LocalPotato exploitation.</p>
+<h5 id="general-networking-traces-localhost-interface">General networking traces (<strong>localhost interface</strong>)</h5>
+<p>Using the exploit causes at least following network traces:</p>
+<ul>
+<li>
+<p>NTLM</p>
+<ul>
+<li>NetNTLM authentication to localhost port 135</li>
+<li>Local NTLM authentication to localhost port 135</li>
+</ul>
+</li>
+<li>
+<p>SMB</p>
+<ul>
+<li>SMB session setup request to localhost port 445</li>
+<li>SMB tree connect request to  tree <code>\\127.0.0.1\c$</code></li>
+<li>SMB file create request to destination of attackers choosing</li>
+<li>SMB file write request </li>
+<li>SMB file close request</li>
+<li>SMB tree disconnect request</li>
+</ul>
+</li>
+</ul>
+<p>Pcap-files <em>LocalPotato1.pcapng</em>  and <em>LocalPotato2.pcapng</em>  are provided in the repository directory <code>PCAPs</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/" class="btn btn-neutral float-left" title="DLL Hijack"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../storsvc-privesc/storsvc_privesc/" class="btn btn-neutral float-right" title="StorSvc Abuse">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../storsvc-privesc/storsvc_privesc/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

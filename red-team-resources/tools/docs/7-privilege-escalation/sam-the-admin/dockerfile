@@ -1,0 +1,37 @@
+#Base image
+FROM ubuntu as baseline
+
+ARG DEBIAN_FRONTEND="noninteractive"
+
+RUN apt-get update && \
+	apt-get install -y \
+	traceroute \
+	cifs-utils \
+	vim \
+	git \
+	wget \
+	ssh \
+	krb5-user \
+	proxychains \
+	python3 \
+	python3.10-venv \
+	python3-pip && \
+	python3 -m pip install virtualenv
+
+ENV PATH="/opt:$PATH"
+
+
+FROM baseline as builder
+# Install attack tools
+
+WORKDIR /opt
+ENV PATH="/opt:$PATH"
+
+RUN \
+	git clone --depth 1 https://github.com/fortra/impacket.git && \
+	python3 -m pip install impacket/  && \
+	git clone https://github.com/ly4k/Pachine && \
+	echo -n "cHl0aG9uMyAvb3B0L2ltcGFja2V0L2V4YW1wbGVzL3BzZXhlYy5weSAkQAo=" |base64 -d > /usr/local/bin/impacket-psexec && \
+	chmod +x /usr/local/bin/impacket-psexec; 
+
+ENTRYPOINT ["/bin/bash","-c"]

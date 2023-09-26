@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/6-credential-access/keepass-password-dumper/keepass-dumper/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>KeePass 2.X Master Password Dumper ([CVE-2023-32784](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32784)) - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "KeePass 2.X Master Password Dumper ([CVE-2023-32784](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32784))";
+        var mkdocs_page_input_path = "6-credential-access/keepass-password-dumper/keepass-dumper/README.md";
+        var mkdocs_page_url = "/6-credential-access/keepass-password-dumper/keepass-dumper/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>KeePass 2.X Master Password Dumper ([CVE-2023-32784](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32784))</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="keepass-2x-master-password-dumper-cve-2023-32784">KeePass 2.X Master Password Dumper (<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32784">CVE-2023-32784</a>)</h1>
+<h2 id="update">Update</h2>
+<p>The vulnerability was assigned <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-32784">CVE-2023-32784</a>. It should be fixed in KeePass 2.54, which <a href="https://sourceforge.net/p/keepass/discussion/329220/thread/f3438e6283/#8a4a">should come out in the beginning of June 2023</a>. Thanks again to Dominik Reichl for his fast response and creative fix!</p>
+<p>Clarification: <strong>the password has to be typed on a keyboard, not copied from a clipboard</strong> (see the How it works sections).</p>
+<h3 id="what-can-you-do">What can you do</h3>
+<p>First, <strong>update to KeePass 2.54 or higher</strong> once available. </p>
+<p>Second, if you've been using KeePass for a long time, your master password (and potentially other passwords) could be in your pagefile/swapfile, hibernation file and crash dump(s). Depending on your paranoia level, you can consider these steps to resolve the issue:</p>
+<ol>
+<li>Change your master password</li>
+<li>Delete crash dumps (depends on your OS, on Windows at least <code>C:\Windows\memory.dmp</code>, but maybe there are others)</li>
+<li>Delete hibernation file</li>
+<li>Delete pagefile/swapfile (can be quite annoying, don't forget to enable it back again)</li>
+<li>Overwrite deleted data on the HDD to prevent carving (e.g. <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cipher">Cipher</a> with <code>/w</code> on Windows)</li>
+<li>Restart your computer</li>
+</ol>
+<p>Or just overwrite your HDD and do a fresh install of your OS.</p>
+<p>Incomplete list of products <strong>that are not impacted</strong> (please create a pull request or an issue for adding more). Rule of thumb is that if it isn't the original KeePass 2.X app written in .NET, it's likely not affected.</p>
+<ul>
+<li><a href="https://github.com/keepassxreboot/keepassxc/discussions/9433">KeePassXC</a></li>
+<li><a href="https://www.reddit.com/r/strongbox/comments/13jg2pz/keepass_2x_master_password_dumper_cve202332784/">Strongbox</a></li>
+<li><a href="https://sourceforge.net/p/keepass/discussion/329220/thread/f3438e6283/#08e1/2240">KeePass 1.X</a></li>
+</ul>
+<h2 id="-">----</h2>
+<p>KeePass Master Password Dumper is a simple proof-of-concept tool used to dump the master password from KeePass's memory. Apart from the first password character, it is mostly able to recover the password in plaintext. No code execution on the target system is required, just a memory dump. It doesn't matter where the memory comes from - can be the <strong>process dump, swap file (<code>pagefile.sys</code>), hibernation file (<code>hiberfil.sys</code>), various crash dumps or RAM dump</strong> of the entire system. <strong>It doesn't matter whether or not the workspace is locked</strong>. It is also possible to dump the password from RAM after KeePass is no longer running, although the chance of that working goes down with the time it's been since then.</p>
+<p>Tested with <code>KeePass 2.53.1</code> on Windows (English) and <code>KeePass 2.47</code> on Debian (keepass2 package). It should work for the macOS version as well. Unfortunately, enabling the <code>Enter master key on secure desktop</code> option doesn't help in preventing the attack. PoC might have issues with databases created by older versions of KeePass, but I wasn't able to reproduce it (see <a href="https://github.com/vdohney/keepass-password-dumper/issues/4">issue #4</a>).</p>
+<p>Finding was confirmed by Dominik Reichl, KeePass's author, <a href="https://sourceforge.net/p/keepass/discussion/329220/thread/f3438e6283/">here</a>. I appreciate Dominik's fast response. Hopefully it will be fixed soon!</p>
+<h2 id="setup">Setup</h2>
+<ol>
+<li><a href="https://dotnet.microsoft.com/en-us/download">Install .NET</a> (most major operating systems supported).</li>
+<li>Clone the repository: <code>git clone https://github.com/vdohney/keepass-password-dumper</code> or download it from GitHub</li>
+<li>Enter the project directory in your terminal (Powershell on Windows) <code>cd keepass-password-dumper</code></li>
+<li><code>dotnet run PATH_TO_DUMP</code></li>
+</ol>
+<p>The easiest way to test this on Windows is to create a process dump in the task manager by right-clicking the KeePass process and selecting "Create dump file".</p>
+<p><img alt="Usage example" src="assets/anim.gif" /></p>
+<ol>
+<li>Alternatively you can add another parameter <code>dotnet run PATH_TO_DUMP PATH_TO_PWDLIST</code> to generate a list of all possible passwords beginning from the second character. </li>
+</ol>
+<h2 id="should-you-be-worried">Should You Be Worried?</h2>
+<p>Depends on your threat model. <strong>If your computer is already infected by malware that's running in the background with the privileges of your user, this finding doesn't make your situation much worse.</strong> However, it might be easier for the malware to be stealthy and evade the antivirus, since unlike KeeTheft or KeeFarce, no process injection or other type of code execution is necessary. </p>
+<p>If you have a reasonable suspicion that someone could obtain access to your computer and conduct forensic analysis, this could be bad. Worst case scenario is that the master password will be recovered, despite KeePass being locked or not running at all. </p>
+<p>If you use full disk encryption with a strong password and your system is clean, you should be fine. No one can steal your passwords remotely over the internet with this finding alone. </p>
+<h2 id="how-it-works">How It Works</h2>
+<p>KeePass 2.X uses a custom-developed text box for password entry, <code>SecureTextBoxEx</code>. This text box is not only used for the master password entry, but in other places in KeePass as well, like password edit boxes (so the attack can also be used to recover their contents).</p>
+<p>The flaw exploited here is that for every character typed, a leftover string is created in memory. Because of how .NET works, it is nearly impossible to get rid of it once it gets created. For example, when "Password" is typed, it will result in these leftover strings: •a, ••s, •••s, ••••w, •••••o, ••••••r, •••••••d. The POC application searches the dump for these patterns and offers a likely password character for each position in the password. </p>
+<p>Reliability of this attack can be influenced depending on how the password was typed and how many passwords were typed per session. However, I've discovered that even if there are multiple passwords per session or typos, the way .NET CLR allocates these strings means that they are likely to be nicely ordered in memory. So if three different passwords were typed, you are likely to get three candidates for each character position in that order, which makes it possible to recover all three passwords. </p>
+<h2 id="dev">Dev</h2>
+<p>It's a quick POC, so likely not very reliable and robust. Please create a pull request if you happen to find an issue and fix it.</p>
+<p>Allowed password characters are currently hardcoded like this: <code>^[\x20-\x7E]+$</code> (all printable ASCII characters and space).</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to <a href="https://github.com/adridlug">adridlug</a> for adding the possibility to auto-generate the password list, and <a href="https://github.com/ynuwenhof">ynuwenhof</a> for refactoring the code.</p>
+<h2 id="related-projects">Related Projects</h2>
+<ul>
+<li><a href="https://github.com/CMEPW/keepass-dump-masterkey">Python implementation of the PoC</a> by <a href="https://github.com/CMEPW">CMEPW</a></li>
+<li><a href="https://github.com/ynuwenhof/keedump">Rust implementation of the PoC</a> by <a href="https://github.com/ynuwenhof">ynuwenhof</a></li>
+</ul>
+<p>I haven't checked any of them yet.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

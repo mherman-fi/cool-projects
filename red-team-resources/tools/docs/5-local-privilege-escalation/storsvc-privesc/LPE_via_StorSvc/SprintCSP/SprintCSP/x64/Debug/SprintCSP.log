@@ -1,0 +1,9 @@
+﻿  main.c
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(111,5): warning C4013: 'StopDependentServices' undefined; assuming extern returning int
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(25,25): warning C4244: 'initializing': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(173,9): warning C4033: 'StopDependentServices' must return a value
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(187,9): warning C4033: 'StopDependentServices' must return a value
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(163,25): warning C4244: 'initializing': conversion from 'ULONGLONG' to 'DWORD', possible loss of data
+C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\SprintCSP\main.c(267): warning C4715: 'StopDependentServices': not all control paths return a value
+     Creating library C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\x64\Debug\SprintCSP.lib and object C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\x64\Debug\SprintCSP.exp
+  SprintCSP.vcxproj -> C:\Users\user\Desktop\redteam-research-master\LPE via StorSvc\SprintCSP\x64\Debug\SprintCSP.dll

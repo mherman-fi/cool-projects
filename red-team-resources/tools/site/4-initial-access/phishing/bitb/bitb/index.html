@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/4-initial-access/phishing/bitb/bitb/" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Browser-in-Browser - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Browser-in-Browser";
+        var mkdocs_page_input_path = "4-initial-access/phishing/bitb/bitb.md";
+        var mkdocs_page_url = "/4-initial-access/phishing/bitb/bitb/";
+      </script>
+    
+    <script src="../../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Browser-in-Browser</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#chromium-application-mode">Chromium application mode</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#inserting-a-fake-address-bar">Inserting a fake address bar</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pop-up-login-window">Pop-up login window</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#impersonating-the-pop-up-login-window">Impersonating the pop-up login window</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#demo">Demo</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#impersonating-endpoint-software">Impersonating endpoint software</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#demo_1">Demo</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#linux-macos">Linux &amp; MacOS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#useful-tricks-with-javascript">Useful tricks with JavaScript</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#detection">Detection</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#dragging-the-window">Dragging the window</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#browser-extension">Browser extension</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Initial Access &raquo;</li>
+      <li>Browser-in-Browser</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="browser-in-browser-attack">Browser-in-browser attack</h1>
+<h2 id="background">Background</h2>
+<h3 id="chromium-application-mode">Chromium application mode</h3>
+<p>Chromium based browsers (such as Chrome and Edge) support the <code>--app</code> commandline flag. This will launch a website in application mode which does several things:  </p>
+<ul>
+<li>Launched window is given a desktop application appearance rather than a browser appearance.</li>
+<li>Launches the website while hiding the address bar.</li>
+<li>Windows taskbar displays the website's favicon rather than the browser's.</li>
+<li>Causes the site to be launched in a seperate browser window.  </li>
+</ul>
+<p>Commands to launch Chrome and Edge in application mode and open <code>JYVSECTEC</code> website:</p>
+<pre><code># Microsoft Edge
+&quot;C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe&quot; --app=https://jyvsectec.fi
+
+# Chrome
+&quot;C:\Program Files\Google\Chrome\Application\chrome.exe&quot; --app=https://jyvsectec.fi
+</code></pre>
+<p>The above commands create the window shown below:<br />
+<img alt="App mode on jyvsectec website" src="../images/app-mode.JPG" /><br />
+We can see the Windows task bar displaying the site's favicon as the icon.  </p>
+<h2 id="inserting-a-fake-address-bar">Inserting a fake address bar</h2>
+<p>Because the application mode hides the address bar, we can create a site with a fake address bar with some basic HTML/CSS:  </p>
+<p><img alt="Fake address bar" src="../images/fake-bar.JPG" /><br />
+This is a local copy of the site edited with the fake URL bar.  </p>
+<h2 id="pop-up-login-window">Pop-up login window</h2>
+<p>When authenticating to websites like Microsoft, Google etc. we're given a pop-up window that asks us to authenticate. The image below shows the window that appears when someone tries to login to Figma with their Google account:  </p>
+<p><img alt="Pop-up login screen" src="../images/login-pop-up-real.JPG" />  </p>
+<h2 id="impersonating-the-pop-up-login-window">Impersonating the pop-up login window</h2>
+<p>Impersonating a pop-up login window is easy with some basic HTML/CSS knowledge. We can use an iframe to point to a malicious server hosting the phishing page and the results are telling:  </p>
+<h3 id="demo">Demo</h3>
+<p><img alt="MS login demo" src="../images/demo.gif" />  </p>
+<h2 id="impersonating-endpoint-software">Impersonating endpoint software</h2>
+<p>With this technique, VPN, backup, Microsoft Office login software or pretty much anything can be impersonated if you have basic HTML/CSS skills.  </p>
+<p>Here's an example of an impersonation of the Microsoft login when logging into Office 365:  </p>
+<p><img alt="Login Comparison" src="../images/comparison-login.jpg" /><br />
+(This example can be found in this repository. It's a forked version of <a href="https://github.com/JoniRinta-Kahila/microsoft-login-spoof">JoniRinta-Kahila's spoofed MS login page</a>).</p>
+<p>Another example is from <a href="https://mrd0x.com/phishing-with-chromium-application-mode/">Mr. D0x</a>, where the Microsoft teams software login prompt is impersonated:  </p>
+<p><img alt="Login comparison - Teams" src="../images/comparison-teams.jpg" /><br />
+The difference between real and fake phishing prompts can be very subtle and most likely will not cause alarm.</p>
+<h3 id="demo_1">Demo</h3>
+<p><img alt="Demo" src="../images/ms-login.gif" /></p>
+<h2 id="linux-macos">Linux &amp; MacOS</h2>
+<p>Chromium's application mode works on other operating systems the same way as per <a href="https://www.chromium.org/developers/design-documents/appmode-mac/">Chromium's documentation</a>.</p>
+<h2 id="useful-tricks-with-javascript">Useful tricks with JavaScript</h2>
+<p>The phishing site can control certain aspects of the window when launched.  </p>
+<p><code>window.close()</code> - Closes the window. Can be used to terminate the window after user performs an action.  </p>
+<p><code>window.moveTo(x,y)</code> - Positions the window. Use this to place the window to a certain area of the screen.  </p>
+<p><code>window.resizeTo(x,y)</code> - Resizes the window. Use this to resize the window to match the software being impersonated.  </p>
+<p>Determining the legitimacy of a URL when hovering over a link is not effective if JavaScript is enabled. The <code>href</code> -tag can be pointed to a legitimate site. This can be overridden with a simple <code>onclick()</code> -event:  </p>
+<pre><code>&lt;a href=&quot;https://jyvsectec.fi&quot; onclick=&quot;return launchWindow();&quot;&gt;JYVSECTEC&lt;/a&gt;
+
+function launchWindow(){
+    // Launch the your fake authentication window
+    return false; // This will make sure the href attribute is ignored
+}
+</code></pre>
+<h2 id="detection">Detection</h2>
+<h3 id="dragging-the-window">Dragging the window</h3>
+<p>One way of detecting a BitB attack is by dragging the window to the edge of the browser. If the window cannot escape the browser then it's not a real window.  </p>
+<h3 id="browser-extension">Browser extension</h3>
+<p>@odacavo released a browser extension that can detect and warn users about embedded iFrames. It's available <a href="https://github.com/odacavo/enhanced-iframe-protection">here</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../../2-recon/hak5/hak5/" class="btn btn-neutral float-left" title="Shark Jack"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../evilnovnc/EvilnoVNC/" class="btn btn-neutral float-right" title="EvilNoVNC">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../../../2-recon/hak5/hak5/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../evilnovnc/EvilnoVNC/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../../..';</script>
+    <script src="../../../../js/theme_extra.js" defer></script>
+    <script src="../../../../js/theme.js" defer></script>
+      <script src="../../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

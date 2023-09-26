@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/sigflip/sigflip-OLD/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>SigFlip / SigLoader - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SigFlip / SigLoader";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/sigflip/sigflip-OLD.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/sigflip/sigflip-OLD/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>SigFlip / SigLoader</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sigflip-sigloader">SigFlip / SigLoader</h1>
+<h2 id="background">Background</h2>
+<p>These tools are used for embedding custom shellcode into a <strong>signed</strong> binary. The binary is executed in a victim system using <em>SigLoader.exe</em>. A Windows machine is required for using this toolkit.</p>
+<p>Since the (malicious) shellcode is encrypted, this method is highly effective at smuggling shellcode into the victim host past any defensive measures.</p>
+<p><a href="https://github.com/med0x2e/SigFlip">Link</a> to the original Git repository.</p>
+<p>Two executables and three libraries have been already compiled using VS Studio. The ready-to-use toolbox includes five files listed in the table below.</p>
+<table>
+<thead>
+<tr>
+<th align="center">File</th>
+<th align="center"> Function </th>
+<th align="center">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">SigFlip.exe</td>
+<td align="center">Shellcode encrypter &amp; injector</td>
+<td align="center">Execute in attacker's Windows machine</td>
+</tr>
+<tr>
+<td align="center">SigLoader.exe</td>
+<td align="center"> Shellcode decrypter &amp; loader</td>
+<td align="center">Execute in victim's Windows machine</td>
+</tr>
+<tr>
+<td align="center">vcruntime140d.dll</td>
+<td align="center">DLL required by SigLoader.exe</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+<tr>
+<td align="center">ucrtbased.dll</td>
+<td align="center">DLL required by SigLoader</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+<tr>
+<td align="center">ucrtbase.dll</td>
+<td align="center">DLL required by SigLoader</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h2 id="technical-information">Technical information</h2>
+<p>For this attack, two separate executables are used. </p>
+<p><strong>SigFlip</strong> is a tool to embed shellcode into a digitally signed binary. Before embedding the shellcode into  PE file's WIN_CERTIFICATE <em>certificate table</em>, the shellcode is encrypted with a password provided by the user (symmetric encryption). </p>
+<p>The shellcode is separately generated in a raw binary format (for example using <code>-f raw</code> in Metasploit, <code>-f shellcode</code> for Sliver and so on).</p>
+<p>This creates a new signed binary with the embedded encrypted shellcode and a valid digital signature.</p>
+<p><strong>SigLoader</strong> is used in the victim system to find the encrypted shellcode from the specified binary, to be decrypted with a given password, loaded into memory and executed. </p>
+<p>The loader executable utilizes an egg-hunt style mechanic to find the shellcode's position by looking for a hex value <em>0xfeedface</em>. Once the shellcode is found it is decrypted and loaded into memory and executed. </p>
+<h2 id="embedding-shellcode-to-a-signed-binary">Embedding shellcode to a signed binary</h2>
+<p>A digitally signed binary <em>ChromeSetup.exe</em> was used for testing purposes. As shellcode, a Sliver beacon payload was used.</p>
+<p>The following syntax is used to encrypt a shellcode and embed it into a binary:</p>
+<pre><code class="language-cmd">SigFlip.exe -i &lt;ORIG_EXE&gt; -s &lt;SHCODE.BIN&gt; -o &lt;OUTFILE.EXE&gt; -e &lt;PASSWORD&gt;
+
+SigFlip.exe -i .\ChromeSetup.exe -s .\beacon.bin -o mod_chrome.exe -e password
+</code></pre>
+<h2 id="executing-the-loader-and-shellcode-on-the-victim-machine">Executing the loader and shellcode on the victim machine</h2>
+<p>Deliver the loader files (SigLoader.exe + 3 DLLs) along with the <em>mod_chrome.exe</em> to the victim machine. </p>
+<p>To execute the encrypted shellcode inside <em>mod_chrome.exe</em>, run the following command on the target system:</p>
+<pre><code class="language-cmd">SigLoader.exe mod_chrome.exe password
+</code></pre>
+<p>In the example below, SigLoader was used to execute a Sliver beacon shellcode on Windows 10 with Defender up-to-date and active (11th May, 2023): </p>
+<p><img alt="execution" src="../images/SigLoader_execution_in_target_system.png" /></p>
+<p>The following screenshot shows Sliver server catching the callback from agent.</p>
+<p><img alt="calling back" src="../images/beacon_calling_back_to_sliver_server.png" /></p>
+<h3 id="improvement-ideas">Improvement ideas</h3>
+<p>General ideas for making the execution more stealthy:</p>
+<ul>
+<li>Run the command with <em>Run</em> as a hidden process</li>
+<li>Modify the source code to make SigLoader not print such suspicious texts</li>
+<li>Deliver </li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/5-local-privilege-escalation/sigflip/sigflip/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>SigLoader - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "SigLoader";
+        var mkdocs_page_input_path = "5-local-privilege-escalation/sigflip/sigflip.md";
+        var mkdocs_page_url = "/5-local-privilege-escalation/sigflip/sigflip/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">SigLoader</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#about-sigflip-and-sigloader">About SigFlip and SigLoader</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#sigflip">SigFlip</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sigloader">SigLoader</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#embedding-shellcode-to-a-signed-binary">Embedding shellcode to a signed binary</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#executing-the-loader-shellcode-on-victim-host">Executing the loader &amp; shellcode on victim host</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#improvement-ideas">Improvement ideas</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#for-blue-teams">For blue teams</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#static-traces">Static traces</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#detecting-sigloader">Detecting SigLoader</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#sigloader-binary-strings">SigLoader binary - strings</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#detecting-the-smuggling-binary">Detecting the smuggling binary</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Local Privilege Escalation &raquo;</li>
+      <li>SigLoader</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sigflip-sigloader">SigFlip &amp; SigLoader</h1>
+<h2 id="background">Background</h2>
+<p>These tools are used for embedding custom shellcode into a <strong>signed</strong> binary, and executing it in a victim system using <em>SigLoader.exe</em>. Note, that a  Windows machine is required for using this toolkit.</p>
+<p>Since the (malicious) shellcode is encrypted, this method is quite certain to succeed in smuggling the shellcode to the victim host past any defensive measures.</p>
+<p>Link to the original Git repository: <img alt="https://github.com/med0x2e/SigFlip" src="https://github.com/med0x2e/SigFlip" /></p>
+<p>For your convenience, 2 executables and 3 libraries have been already compiled using VS Studio. The ready-to-use toolbox includes 5 files listed in the table below.</p>
+<table>
+<thead>
+<tr>
+<th align="center">File</th>
+<th align="center"> Function </th>
+<th align="center">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">SigFlip.exe</td>
+<td align="center">Shellcode encrypter &amp; injector</td>
+<td align="center">Execute in attacker's Windows machine</td>
+</tr>
+<tr>
+<td align="center">SigLoader.exe</td>
+<td align="center"> Shellcode decrypter &amp; loader</td>
+<td align="center">Execute in victim's Windows machine</td>
+</tr>
+<tr>
+<td align="center">vcruntime140d.dll</td>
+<td align="center">DLL required by SigLoader.exe</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+<tr>
+<td align="center">ucrtbased.dll</td>
+<td align="center">DLL required by SigLoader</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+<tr>
+<td align="center">ucrtbase.dll</td>
+<td align="center">DLL required by SigLoader</td>
+<td align="center">Transfer to victim machine with SigLoader</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p>The figure below illustrates the concept. Actions on the upper half are carried out on the attacking machine. Actions on the lower half of the figure are carried out on the target machine.</p>
+<p><img alt="Basic idea of SigFlip / SigLoader" src="../images/SigFlip_SigLoader_concept.jpg" /></p>
+<h2 id="about-sigflip-and-sigloader">About SigFlip and SigLoader</h2>
+<p>Two separate executables are used. </p>
+<h4 id="sigflip">SigFlip</h4>
+<p><strong>SigFlip</strong> is a tool to embed shellcode into a digitally signed binary. Before embedding the shellcode to  PE file's WIN_CERTIFICATE <em>certificate table</em>, the shellcode is encrypted with a password provided by the user (symmetric encryption). </p>
+<p>The shellcode has to be separately generated in a raw binary format (as example,   <code>-f raw</code> in Metasploit,   <code>-f shellcode</code> for Sliver  and so on).</p>
+<p>This creates a new signed binary, which has the encrypted shellcode embedded into and a valid digital signature.</p>
+<h4 id="sigloader">SigLoader</h4>
+<p><strong>SigLoader</strong> is used in the victim system, to find the encrypted shellcode from the specified binary, decrypt it with a given password, load it into memory and execute it. </p>
+<p>Loader executable utilizes an egg-hunt style mechanic to find the shellcode's position by looking for a hex value <em>0xfeedface</em>. Once the shellcode is found, it is decrypted and loaded into memory, followed by execution. </p>
+<h2 id="embedding-shellcode-to-a-signed-binary">Embedding shellcode to a signed binary</h2>
+<p>For testing purposes, a digitally signed binary <em>ChromeSetup.exe</em> is used. As shellcode, a Sliver beacon payload is used.</p>
+<p>To encrypt a shellcode and embed it into a binary, following syntax is used:</p>
+<pre><code class="language-cmd">SigFlip.exe -i &lt;ORIG_EXE&gt; -s &lt;SHCODE.BIN&gt; -o &lt;OUTFILE.EXE&gt; -e &lt;PASSWORD&gt;
+
+SigFlip.exe -i .\ChromeSetup.exe -s .\beacon.bin -o mod_chrome.exe -e password
+</code></pre>
+<h2 id="executing-the-loader-shellcode-on-victim-host">Executing the loader &amp; shellcode on victim host</h2>
+<p>Deliver the loader files (SigLoader.exe + 3 DLLs) along with the <em>mod_chrome.exe</em> to the victim machine. </p>
+<p>To execute the encrypted shellcode inside the <em>mod_chrome.exe</em>, run the following command on the target system:</p>
+<pre><code class="language-cmd">SigLoader.exe mod_chrome.exe password
+</code></pre>
+<p>Below is a screenshot, where SigLoader was used to execute a Sliver beacon shellcode on Windows 10 with Defender up-to-date and active (11th May, 2023). </p>
+<p><img alt="" src="../images/SigLoader_execution_in_target_system.png" /></p>
+<p>The following screenshot shows Sliver server catching the callback from agent.</p>
+<p><img alt="" src="../images/beacon_calling_back_to_sliver_server.png" /></p>
+<h3 id="improvement-ideas">Improvement ideas</h3>
+<p>General ideas for making the execution more stealthy:</p>
+<ul>
+<li>Run the command with <em>Run</em> as a hidden process</li>
+<li>Modify the source code to make SigLoader not print so suspicious texts</li>
+<li>Deliver </li>
+</ul>
+<h2 id="for-blue-teams">For blue teams</h2>
+<p>There are two kinds of traces left by SigLoader. The tool leaves static and dynamic traces to the victim machine. The following table below shows static traces related to the tool either directly or indirectly.</p>
+<h2 id="static-traces">Static traces</h2>
+<h3 id="detecting-sigloader">Detecting SigLoader</h3>
+<p>The following traces are related to the SigLoader binary. Every file listed below is not a certain indicator of compromise.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Trace / type</th>
+<th align="center">Trace location</th>
+<th align="center">Hash</th>
+<th align="center">Presence indicator</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">SigLoader.exe / file</td>
+<td align="center">Victim host</td>
+<td align="center">md5: <code>de452f0e70df61a3895bbb35245f0ff3</code>, sha1: <code>56cc0dfaf84a49828343800bf3fb11948b64d0f5</code></td>
+<td align="center">100%</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">vcruntime140d.dll / file</td>
+<td align="center">Victim host</td>
+<td align="center">md5:<code>d3a035156204a412e8e69d7f8bcdc838</code>, sha1: <code>d5a77b1c62822d47b4bee8db1e84ddc1b3666c15</code></td>
+<td align="center">&lt;1%</td>
+<td align="center">Present also when VS Studio or another compiling tool is installed</td>
+</tr>
+<tr>
+<td align="center">ucrtbase.dll / file</td>
+<td align="center">Victim host</td>
+<td align="center">md5: <code>2c8fe06966d5085a595ffa3c98fe3098</code>, sha1:<code>e82945e3e63ffef0974d6dd74f2aef2bf6d0a908</code></td>
+<td align="center">&lt;1%</td>
+<td align="center">Usually installed to Windows by default(at least Win10),  <a href="https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment?view=msvc-170">Info</a></td>
+</tr>
+<tr>
+<td align="center">ucrtbased.dll / file</td>
+<td align="center">Victim host</td>
+<td align="center">md5:<code>108b715a604d800501462fb648b82a75</code> sha1:<code>c9bec97e6033f60113581c76a97f5fc89f37520a</code></td>
+<td align="center">&lt;1%</td>
+<td align="center">Present also when VS Studio or another such tool is installed</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sigloader-binary-strings">SigLoader binary - strings</h4>
+<p>When hunting SigLoader executable, strings of the suspicious executable may provide a strong indicator of the binary being SigLoader.</p>
+<p>As example, the following string can be found from the SigLoader binary provided in the toolbox:</p>
+<p><code>C:\Users\user\Desktop\SigFlip-main\Native\SigLoader\x64\Debug\SigLoader.pdb</code></p>
+<p>The string above provides two hunting ideas:</p>
+<ol>
+<li>Look for strings <code>sigflip</code> and <code>sigloader</code> (case insensitive) in the binary. If either one of these is present, the binary very likely is SigLoader.  </li>
+</ol>
+<h3 id="detecting-the-smuggling-binary">Detecting the smuggling binary</h3>
+<p>Since SigLoader is used for extracting and executing shellcode from a signed binary's certificate table, the signed binary can also be used as a possible indicator of compromise. However, the checksum or size of the signed binary can not be used to determine wether or not this binary is the "smuggling binary" (signed binary which has shellcode embedded into it). Size of the "smuggling binary"  depends heavily on the shellcode's size, and it's checksum practically is different in every case.</p>
+<p>SigLoader searches the encrypted shellcode from a certificate table by looking for an entry of <strong>two</strong> sequential <code>0xfeedface</code> bytes. This provides a vector for detection:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Trace / type</th>
+<th align="center">Trace location</th>
+<th align="center">Found in</th>
+<th align="center">Presence Indicator</th>
+<th align="center">Additional info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">two sequential <code>0xfeedface</code> bytes / bytes</td>
+<td align="center">Victim host</td>
+<td align="center">A signed binary's certificate table</td>
+<td align="center">&gt;90%</td>
+<td align="center">The "egg" hunted by the SigLoader, <code>feed face feed face</code></td>
+</tr>
+</tbody>
+</table>
+<p>The following example Yara rule can be used to search for this  "egg":</p>
+<pre><code>rule SigLoaderEgg {
+    strings:
+    $hex_feedface = {FE ED FA CE FE ED FA CE}
+
+    condition:
+    $hex_feedface
+}
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../storsvc-privesc/storsvc_privesc/" class="btn btn-neutral float-left" title="StorSvc Abuse"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../sliver/sliver/" class="btn btn-neutral float-right" title="Sliver">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../storsvc-privesc/storsvc_privesc/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../sliver/sliver/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

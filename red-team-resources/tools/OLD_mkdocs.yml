@@ -1,0 +1,32 @@
+site_name: 'Red-Teaming Tools Usage Guide'
+site_url: "http://ab8910.pages.labranet.jamk.fi"
+theme:
+  name: readthedocs
+  features:
+    - language: en
+    - history_buttons: false
+    - article_nav_bottom: false
+    - article_nav_top: false
+    - content.code.annotation
+  palette:
+    - scheme: default
+  font:
+    - text: Fira Sans
+    - code: Fira code
+nav:
+  - 'Attack Chain': index.md
+  - Preparation:
+    - Sigflip: 1-preparation/sigflip/sigflip.md
+  - 'Resource Development':
+    - 'Keepass Password Dumper': 3-resource-development/keepass-password-dumper/keepass.md
+  - 'Initial Access':
+    - Browser-in-Browser: 4-initial-access/phishing/bitb/bitb.md
+    - EvilNoVNC: 4-initial-access/phishing/evilnovnc/EvilnoVNC.md
+  - Execution:
+    - Sigloader: 1-preparation/sigflip/sigflip.md
+  - 'Command and control':
+    - Sliver: 5-command-control/sliver/sliver.md
+  - 'Privilege Escalation':
+    - LocalPotato: 4-local-privilege-escalation/localpotato/LocPotato.md
+    - StorSvc Abuse: 4-local-privilege-escalation/storsvc-privesc/storsvc_privesc.md
+    - 'SAM the Admin': 6-privilege-escalation/sam-the-admin/sam-the-admin.md

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="http://ab8910.pages.labranet.jamk.fi/3-resource-development/keepass-password-dumper/keepass/" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Keepass Password Dumper - Red-Teaming Tools Usage Guide</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Keepass Password Dumper";
+        var mkdocs_page_input_path = "3-resource-development/keepass-password-dumper/keepass.md";
+        var mkdocs_page_url = "/3-resource-development/keepass-password-dumper/keepass/";
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Red-Teaming Tools Usage Guide
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Preparation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../1-preparation/phases/">Attack Chain</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reconnaissance</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../2-recon/hak5/hak5/">Shark Jack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Initial Access</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/bitb/bitb/">Browser-in-Browser</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/evilnovnc/EvilnoVNC/">EvilNoVNC</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../4-initial-access/phishing/dll-hijack/dll-hijack/">DLL Hijack</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Local Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/localpotato/LocPotato/">LocalPotato</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/storsvc-privesc/storsvc_privesc/">StorSvc Abuse</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sigflip/sigflip/">SigLoader</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Command and Control</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../5-local-privilege-escalation/sliver/sliver/">Sliver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Credential Access</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Keepass Password Dumper</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#background">Background</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#practical-exploitation-requirements">Practical exploitation requirements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#cracking-the-db-password">Cracking the DB password</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#analysing-the-output">Analysing the output</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Domain Privilege Escalation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/">SAM the Admin</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Red-Teaming Tools Usage Guide</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Credential Access &raquo;</li>
+      <li>Keepass Password Dumper</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="keepass-password-dumper">KeePass Password Dumper</h1>
+<p>Works against KeePass versions:  &lt;= 2.53.1  </p>
+<p>Exploit code repository: https://github.com/CMEPW/keepass-dump-masterkey</p>
+<h2 id="background">Background</h2>
+<p>KeePass Password Dumper leverages vulnerability <strong>CVE-2023-32784</strong>  to obtain a fragment of the KeePass database master password. The tool works by reading a <strong>memory dump</strong> file containing a KeePass process dump. One of the following memory dump types can be utilized:</p>
+<ul>
+<li>
+<p>KeePass process dump</p>
+</li>
+<li>
+<p>Swap file (Linux)</p>
+</li>
+<li>
+<p>pagefile.sys (Windows)</p>
+</li>
+<li>
+<p>hiberfile.sys (Windows, hibernation file)</p>
+</li>
+<li>
+<p>RAM dump of the entire system</p>
+</li>
+</ul>
+<p>The tool's success rate is very good. The tool typically recovers everything but the first character. For the second character the tool yields an array which contains the correct second character. The first character needs to be brute-forced. The second character should be fuzzed with the array containing the correct character.</p>
+<h3 id="practical-exploitation-requirements">Practical exploitation requirements</h3>
+<ul>
+<li>
+<p>The KeePass version should be &lt;= 2.53.1</p>
+</li>
+<li>
+<p><strong>Before</strong> executing the memory dump, the (victim) user has to have a database active in KeePass processes</p>
+</li>
+<li>
+<p>The (victim) user has to <strong>type the password</strong> to open the database with a master key (pasting from the clipboard will not work)</p>
+</li>
+</ul>
+<h2 id="cracking-the-db-password">Cracking the DB password</h2>
+<ol>
+<li>
+<p>Acquire a memory dump containing the data of the whole KeePass process.</p>
+</li>
+<li>
+<p>Run python script to analyze the dump file</p>
+</li>
+</ol>
+<pre><code class="language-python">  python3 poc.py &lt;PATH_TO_DUMP&gt;
+
+  example
+
+  python3 poc.py KeePass.exe.2.52.dmp
+
+</code></pre>
+<h3 id="analysing-the-output">Analysing the output</h3>
+<p>The figure below shows the output of poc.py after it analyzed dump of KeePass version 2.52.</p>
+<p><img alt="Example output of KeePass password dumper" src="../images/analysing_dump_results_2.png" /></p>
+<p><br></p>
+<p>First character of the master password remained undiscovered. In this case program provided 11 different possibilities for the 2nd letter of the password. </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../../5-local-privilege-escalation/sliver/sliver/" class="btn btn-neutral float-left" title="Sliver"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/" class="btn btn-neutral float-right" title="SAM the Admin">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../../5-local-privilege-escalation/sliver/sliver/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../7-privilege-escalation/sam-the-admin/sam-the-admin/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
