@@ -6,7 +6,7 @@ This was achieved through a host of automated processes which pulled system info
 
 ### Project Pipeline
 
-![pipeline](/docs/files/readme/images/pipeline.png)
+![pipeline](docs/files/readme/images/pipeline.png)
 
 BOMs are scanned by Dependency-Track for vulnerabilities as part of the upload process. This can also be done by Grype, but these scans but are not supported.
 
