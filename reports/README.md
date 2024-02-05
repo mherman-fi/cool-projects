@@ -1,3 +1,3 @@
 ## Noteworthy reports
 
-A small repository of reports I have produced in the course of my studies. 
+A selection of interesting reports I have produced in the course of my studies. 
