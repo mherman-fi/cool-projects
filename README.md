@@ -22,6 +22,6 @@ MkDocs is installed with pip. It can be downloaded via a script from [this](http
 
 ## Dataset
 
-It was decided an on-demand site for the dataset project was not necessary given its limited scope. But it's still pretty cool. Feel free to look around. 
+An on-demand site for dataset project is not available. But it's still pretty cool. Feel free to look around. 
 
-See the individual project readme for further information. 
+See the individual project readmes for further information. 
