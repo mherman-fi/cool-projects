@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head ><style>
+    * {
+        font-family: Verdana, Geneva, Tahoma, sans-serif
+    }
+    table, th, td {
+       outline-style: auto;
+       outline-color: black;  
+       padding: 1px;
+       width: 200px;    
+    }
+    th {
+        width: 50px;
+    }
+</style>
+    <title>Exercise 6-3 | User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    <a href="/adduser">Add New User</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.name %></td>    
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

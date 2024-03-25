@@ -1,0 +1,17 @@
+The code executes the following:
+
+Task1 to execution...
+Task2 to execution...
+Task3 to execution...
+Last code line executed!
+Task3 finished!
+Task1 finished!
+Task2 finished!
+
+The print() and execute() functions are called with different strings and task times. 
+The print() function is passed to execute() as a callback. 
+Execute() calls print() with the string and task time as arguments. 
+setTimeout() is used in print() to log a message to the console after the specified task time has elapsed. 
+This means the messages are not logged immediately, but after the specified time for each call to print(). 
+The code logs "Task1 to execution...", "Task2 to execution...", "Task3 to execution...", and "Last code line executed!" immediately.
+"Task3 finished!", "Task1 finished!", and "Task2 finished!" is logged after the specified task times have elapsed for each call to print().

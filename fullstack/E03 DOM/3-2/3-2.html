@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="3-2.css">
+  <title>Exercise 3-2</title>
+</head>
+<body>
+  <button id="button">Show Handicap</button>
+  <ul id="hcplist"></ul>
+  <script>
+    let hcpdata = [
+      { "name": "Ari", "hcp": 54 },
+      { "name": "Pasi", "hcp": 5 },
+      { "name": "Seppo", "hcp": 20 }
+    ];
+    const button = document.getElementById("button");
+    const hcplist = document.getElementById("hcplist");
+    button.addEventListener("click", () => {
+      hcplist.innerHTML = "";
+      hcpdata.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = `${player.name}: ${player.hcp}`;
+        hcplist.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>

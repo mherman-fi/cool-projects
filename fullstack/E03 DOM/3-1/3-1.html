@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="3-1.css">
+    <title>Exercise 3-1</title>
+</head>
+<h1>Image Gallery</h1>
+<body>
+  <div id="navbar">
+    <ul>
+      <li><a href="#" onclick="showImage('image-1')">IMAGE 1</a></li>
+      <li><a href="#" onclick="showImage('image-2')">IMAGE 2</a></li>
+      <li><a href="#" onclick="showImage('image-3')">IMAGE 3</a></li>
+    </ul>
+  </div>
+  <div id="gallery">
+    <img src="image-1.png" id="image-1" class="active" />
+    <img src="image-2.png" id="image-2" />
+    <img src="image-3.png" id="image-3" />
+  </div> 
+</html>
+<script>function showImage(imageId) {
+  const images = document.querySelectorAll('#gallery img');
+  images.forEach(image => {
+    image.classList.remove('active');
+  });
+  const image = document.querySelector(`#${imageId}`);
+  image.classList.add('active');
+}
+</script> 
+</body>
+</html>

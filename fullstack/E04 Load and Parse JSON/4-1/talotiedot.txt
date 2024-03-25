@@ -1,0 +1,43 @@
+Create a web page which shows real estate sales announcements using the below information. 
+
+House1
+talo1.jpg
+Lönnrotinkatu 3, 00120 , Helsinki
+170
+Granholmin suunnittelema vuonna 1896 valmistunut Kivipalatsi Pyyn korttelissa kuuluu tänäkin päivänä Helsingin kauneimpiin rakennuksiin.
+700000
+
+House2
+talo2.jpg
+Telakkakatu 3 A, 00150, Helsinki 
+180
+Keittiöstä pariovet avaavat parvekkeen osaksi huonetilaa. Kaksi tilavaa kylpyhuonetta, toisessa amme. Joustavasti muunneltavia huonejakoja, paljon ikkunoita.
+800000
+
+House3
+talo3.jpg
+Lönnrotinkatu 3, 00120, Helsinki 
+210
+Tämän rauhallisen, täydellisesti saneeratun ja muuttovalmiin huoneiston sisäänkäynti on suojaisan sisäpihan puolella. Huoneiden ikkunat antavat Yrjönkadulle, avokeittiön ja kodinhoitohuoneen ikkunat ovat sisäpihalle.
+900000
+
+House4
+talo4.jpg
+Kunnallisneuvoksentie 8 A, 00930 Helsinki
+190
+Helsingin keskustan upeimmasta arvoyhtiöstä on nyt tarjolla kaupungin parhaimmat keskustanäkymät. Historiallinen Lackmanin talo on täydellisesti saneerattu uuteen loistoonsa rakennusyhtiö Hartelan johdolla vuonna 2011 kaunista arkkitehtuuria kunnioittaen.
+1100000
+
+House5
+talo5.jpg
+Katajaharjuntie 18, 00200 Helsinki
+220
+Huikean kaunis ja laadukas kokonaisuus arvostetulla alueella meren läheisyydessä Marjaniemessä. Tämä moitteettomassa kunnossa oleva ja hyvin suunniteltu talokaunotar on rakennettu vuonna 2000 ja kuntotarkastettu elokuussa 2014.
+1200000
+
+Use HTML/CSS/JavaScript/JSON and Fetch API. Use arrays as a root in the JSON. The array should contain house objects. The house object will have image, address, size, price and text. Create an HTML file which has an empty div element with id="houses".
+
+The .css can be styled with #houses, .houseContainer, .houseImage, p.header, 
+p.text.
+
+Create a separate JavaScript file to be used in the HTML file. Load and render JSON data (Highscores to list). Create a fetchHouses() function to fetch the houses JSON and then create renderHouses() to create the needed elements to DOM.

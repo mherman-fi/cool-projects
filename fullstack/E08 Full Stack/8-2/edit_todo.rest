@@ -1,0 +1,7 @@
+PUT http://localhost:3000/todos/63f3cf583fa8a0a9eab7361a
+Content-Type: application/json
+
+{
+  "text": "Fixing stuff.",
+  "completed": true
+}

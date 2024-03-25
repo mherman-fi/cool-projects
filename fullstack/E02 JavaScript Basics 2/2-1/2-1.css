@@ -1,0 +1,29 @@
+#form {
+  width: 50%;
+  margin: 0 left;
+  position: absolute;
+}
+#form label {
+  margin-bottom: 5px;
+}
+#form input[type="number"] {
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  width: 25%;
+  text-align: center;
+  display: inline-block;
+
+}
+#form button[type="submit"] {
+  width: 25%;
+  background-color: #2a92d7;
+  color: white;
+  padding: 14px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+#result {
+  text-align: left;
+  font-size: large;
+}

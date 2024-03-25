@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="2-6.css">
+  <title>Exercise 2-6</title>
+  <script src="./2-6.js" defer></script>
+</head>
+
+<body>
+  <form id="speed-calculator" onsubmit="return false" ;>
+    <fieldset>
+      <legend>Speed Calculator</legend>
+      <label>Hours</label>
+      <input type="number" id="hours" placeholder="0" min="0" />
+      <label>Minutes</label>
+      <input type="number" id="minutes" placeholder="0" min="0" max="59" />
+      <label>Seconds</label>
+      <input type="number" id="seconds" placeholder="0" min="0" max="59" />
+      <label>Kilometers</label>
+      <input type="number" id="kilometers" placeholder="1" min="1" /><br>
+      <button type="submit" onclick="submitForm(hours.value, minutes.value, seconds.value, kilometers.value)">Calculate</button>
+      <div id = "result"></div>
+    </fieldset> 
+  </form>
+</body>
+</html>

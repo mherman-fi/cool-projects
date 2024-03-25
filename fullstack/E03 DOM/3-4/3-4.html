@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 3-4 | Simple Todo</title>
+</head>
+<body>
+    <h1>Simple ToDo</h1>
+ToDo: <br>
+<input type="text" id="todoInput" /> <br><br>
+<button id="addButton">Add</button>
+<button id="removeButton">Remove List</button>
+<br>
+<ul id="todoList"></ul>
+
+<script>
+const todoList = document.getElementById("todoList");
+
+document.getElementById("addButton").addEventListener("click", () => {
+  const todo = document.getElementById("todoInput").value;
+  const newTodo = document.createElement("li");
+  newTodo.innerHTML = todo;
+  newTodo.addEventListener("click", (e) => {
+    todoList.removeChild(e.target);
+  });
+  todoList.appendChild(newTodo);
+});
+
+document.getElementById("removeButton").addEventListener("click", () => {
+  todoList.innerHTML = "";
+});
+</script>
+</body>
+</html>

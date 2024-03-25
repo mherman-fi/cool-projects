@@ -1,0 +1,64 @@
+@import url(https://cdn.simplecss.org/simple.min.css);
+
+/* design elements optimised for dark mode */
+fieldset {
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgb(39, 39, 39);
+    border: 1px solid black;
+}
+h1, label, legend {color: rgb(224, 224, 224);
+}
+
+legend {
+    font-size: 1.2em;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #4266b3;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.delete {
+    cursor: pointer;
+    color: rgba(216, 15, 15, 0.541);
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: square;
+    margin: 20px 0 20px 0;
+}
+
+li {
+    padding: 12px;
+}
+
+li.highlight {
+    background-color: #4978b6;
+    color: rgb(253, 249, 249);
+}

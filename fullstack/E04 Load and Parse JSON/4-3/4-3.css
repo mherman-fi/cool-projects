@@ -1,0 +1,39 @@
+@import url(https://cdn.simplecss.org/simple.min.css);
+
+fieldset {
+    max-width: 70%;
+    background-color: aliceblue;
+}
+#result-area {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+#search-form {
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+#name-input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+#name-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#name-list li {
+    padding: 12px;
+}
+
+#name-list li.highlight {
+    background-color: #4978b6;
+    color: rgb(253, 249, 249);
+}

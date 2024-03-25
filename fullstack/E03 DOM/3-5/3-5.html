@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="3-5.css">
+    <title>Exercise 3-5 | Party</title>
+    <head>
+        <title>Colour Changer</title>
+        <link rel="stylesheet" href="3-5.css">
+        <head>
+            <title>Colour Changer</title>
+          </head>
+          <body>
+            <fieldset>
+              <legend>Select party colour</legend>
+              <h1>Select colour:</h1>
+              <select id="color-select">
+                <option value="#ff0000">Red</option>
+                <option value="#0000ff">Blue</option>
+                <option value="#00ff00">Green</option>  
+              </select>
+              <h1>What party?</h1>
+              <input type="text" id="party-input">
+              <button onclick="changeColour()">Change chosen background colour</button>
+              <div id="result-area">
+                <h2>Result Area</h2>
+                <div id="party-text"></div>
+                <p id="color-code"></p>
+              </div>
+            </fieldset>
+            <script>
+              // Get HTML element references
+              var colorSelect = document.getElementById("color-select");
+              var partyInput = document.getElementById("party-input");
+              var resultArea = document.getElementById("result-area");
+              var partyText = document.getElementById("party-text");
+              var colorCode = document.getElementById("color-code");
+          
+              // Update result area text
+              partyInput.addEventListener("input", function() {
+                // Ensure the input only contains letters
+                var party = this.value.replace(/[^a-zA-Z]/g, "");
+                partyText.textContent = party;
+              });
+          
+              function changeColour() {
+                // Get selected colour from dropdown menu
+                var color = colorSelect.value;
+          
+                // Change background colour of result area and update colour code text
+                resultArea.style.backgroundColor = color;
+                colorCode.textContent = "Colour code " + color;
+              }
+            </script>
+          </body>
+          </html>

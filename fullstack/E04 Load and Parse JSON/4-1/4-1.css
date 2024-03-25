@@ -1,0 +1,29 @@
+* {
+    font-family: Arial, Helvetica, sans-serif
+}
+#houses {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.houseContainer {
+    width: 50%;
+    margin: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+}
+.houseImage {
+    width: 300px;
+    height: 200px;
+    object-fit: contain;
+    margin: 10px;
+}
+p.header {
+    font-weight: bold;
+    margin: 10px;
+}
+.text {
+    font-style: italic;
+}

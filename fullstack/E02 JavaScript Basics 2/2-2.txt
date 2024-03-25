@@ -1,0 +1,9 @@
+The function myFunctionWithCallback() takes three arguments: p1, p2, and callback. 
+The function returns the result of calling the callback function with p1 and p2 as arguments.
+The funtion myFunc() takes two arguments: p1 and p2. 
+It returns a string that interpolates p1 and p2 into a sentence. 
+The result is calls the myFunctionWithCallback() function with 'ham', 'cheese', and myFunc as arguments. 
+Console.log() is called with result as its argument. 
+The result of calling myFunc() with 'ham' and 'cheese' as arguments is printed to the web console. 
+The fuction myFunc() returns the string "Pizza with ham and cheese" when called with 'ham' and 'cheese' as arguments.
+This is why this string is logged to the console.

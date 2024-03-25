@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="3-3.css">
+  <title>Exercise 3-3 | Student Evaluation</title>
+</head>
+<body>
+    
+  <form>
+    <fieldset>
+        <legend>Student Evaluation</legend>
+        <div class="grid">
+          <label for="test1">T1</label>
+          <label for="test2">T2</label>
+          <label for="test3">T3</label>
+          <label for="test4">T4</label>
+          <input class="num" id="test1" onBlur="calc()">
+          <input class="num" id="test2" onBlur="calc()">
+          <input class="num" id="test3" onBlur="calc()">
+          <input class="num" id="test4" onBlur="calc()">
+          <div class="divider"></div>
+          <label class="points">Points: </label>
+          <span id="totalPoints" class="points"></span>
+          <label class="grade">Grade: </label>
+          <span id="grade" class="grade"></span>
+        </div>
+    </fieldset>
+</form>
+
+  <script>
+    function calc() {
+      // Get input elements
+      var test1 = document.getElementById('test1');
+      var test2 = document.getElementById('test2');
+      var test3 = document.getElementById('test3');
+      var test4 = document.getElementById('test4');
+      var totalPoints = document.getElementById('totalPoints');
+      var total = parseInt(test1.value) + parseInt(test2.value) + parseInt(test3.value) + parseInt(test4.value);
+      totalPoints.innerHTML = total;
+      var grade = document.getElementById('grade');
+      if (total >= 22) {
+        grade.innerHTML = "5";
+      } else if (total >= 18) {
+        grade.innerHTML = "4";
+      } else if (total >= 16) {
+        grade.innerHTML = "3";
+      } else if (total >= 13) {
+        grade.innerHTML = "2";
+      } else if (total >= 0) {
+        grade.innerHTML = "1";
+      } else {
+        grade.innerHTML = "0";
+      }
+    }
+  </script>
+</body>
+</html>
+</body>

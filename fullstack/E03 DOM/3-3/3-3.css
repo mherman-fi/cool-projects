@@ -1,0 +1,22 @@
+@import url(https://cdn.simplecss.org/simple.min.css);
+
+fieldset {
+    max-width: 25%;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 50px 50px 50px 50px; 
+    grid-template-rows: auto 1fr;
+    grid-gap: 10px;   
+    
+}
+.divider {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid rgb(175, 172, 172);
+}
+.points {
+    grid-column: 1;
+}
+.grade {
+    grid-column: 1;
+}

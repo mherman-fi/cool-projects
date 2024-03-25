@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Lady Gaga Concert</title>
+</head>
+
+<body>
+<p>OMG - Lady Gaga has started singing!</p>
+<!-- Add new text every five seconds -->
+<script>
+// Defines repetitions
+var repeats = 3;
+
+// Add the text every five seconds
+setInterval(function() {
+  if (repeats <= 0) return;
+  var p = document.createElement("p");
+  p.innerHTML = "NICE - fireworks!";
+  document.body.appendChild(p);
+  // Decrement the repeat counter
+  repeats--;
+}, 5000);
+</script>
+<!-- Add final text after 20 seconds -->
+<script>
+setTimeout(function() {
+  var p = document.createElement("p");
+  p.innerHTML = "WOW - It was the best concert in my life...";
+  document.body.appendChild(p);
+}, 20000);
+</script>
+
+</body>
+</html>

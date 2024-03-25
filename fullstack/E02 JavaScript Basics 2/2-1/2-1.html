@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="2-1.css">
+  <title>Exercise 2-1</title>
+</head>
+<body>
+  <h1>Calculate the numbers</h1>
+<!-- Form HTML -->
+    <form id="form">
+      <input type="number" id="num1" name="num1"><br>
+      <input type="number" id="num2" name="num2"><br>
+
+      <button type="submit">Calculate</button>
+    </form>
+<!-- Div to display result -->
+<div id="result"></div>
+
+<!-- Form and submission JS -->
+<script>
+  function calculateSum(num1, num2) {
+    return num1 + num2;
+  }
+  function displaySum(num1, num2) {
+    const sum = calculateSum(num1, num2);
+    // Result from div
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `Sum is ${sum}`;
+  }
+  const form = document.getElementById('form');
+  // Event listener for submissions
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    // Form inputs
+    const num1 = parseInt(form.num1.value);
+    const num2 = parseInt(form.num2.value);
+    displaySum(num1, num2);
+  });
+</script>
+</body>
